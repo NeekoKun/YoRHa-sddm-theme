@@ -88,19 +88,158 @@ ColumnLayout {
                 }
             }
 
-            Image {
-                
-            }
-
-            Image {
-                id: yorhaLogo
+            ColumnLayout {
                 anchors.fill: parent
-                anchors.centerIn: parent
-                anchors.margins: 20
 
-                source: Qt.resolvedUrl("../Assets/yorha_logo.png")
-                
-                fillMode: Image.PreserveAspectFit
+                Item {
+                    id: logoHeader
+                    anchors.top: parent.top
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 47
+
+                    Rectangle {
+                        anchors.fill: parent
+                        color: "#000000"
+                        opacity: 0.7
+                    }
+
+                    Text {
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.leftMargin: 30
+                        text: "YoRHa"
+                        font.family: formContainer.fontFamily
+                        font.pointSize: root.font.pointSize * 1.2
+                        color: "#D5CFAF"
+                        opacity: 0.9
+                    }
+                }
+
+                Item {
+                    id: logoContent
+                    anchors.margins: 30
+                    anchors.topMargin: 20
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.top: logoHeader.bottom
+                    height: 200
+
+                    Rectangle {
+                        anchors.fill: parent
+                        color: "#AFA98F"
+                    }
+
+                    Image {
+                        id: yorhaLogo
+                        anchors.fill: parent
+                        anchors.centerIn: parent
+                        anchors.margins: 10
+                        source: Qt.resolvedUrl("../Assets/yorha_logo.png")
+                        fillMode: Image.PreserveAspectFit
+                        antialiasing: true
+                    }
+                }
+
+                Item {
+                    id: logoCaption
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.top: logoContent.bottom
+                    anchors.margins: 30
+                    height: 47
+
+                    Text {
+                        font.pointSize: root.font.pointSize * 1.2
+                        font.family: formContainer.fontFamily
+                        color: "#34332B"
+                        text: "For the Glory of Mankind"
+                        opacity: 0.8
+                    }
+                }
+
+                Rectangle {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.top: logoCaption.bottom
+                    anchors.leftMargin: 30
+                    anchors.rightMargin: 30
+                    height: 2
+                    color: "#AFA98F"
+                    opacity: 1
+                }
+
+                Item {
+                    id: logoQuote
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.top: logoCaption.bottom
+                    anchors.bottom: parent.bottom
+                    anchors.margins: 30
+
+                    property string quoteText: {
+                        var fileUrl = Qt.resolvedUrl("../Quotes/nier.txt");
+                        var quoteText = "";
+                        var xhr = new XMLHttpRequest();
+                        xhr.open("GET", fileUrl, false);
+                        xhr.onreadystatechange = function() {
+                            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                                quoteText = xhr.responseText;
+                            }
+                        }
+                        xhr.send();
+                        var lines = quoteText.split(/\r?\n/).filter(function(line) { return line.trim().length > 0; });
+                        if (lines.length > 0) {
+                            var idx = Math.floor(Math.random() * lines.length);
+                            return lines[idx];
+                        }
+                        return "";
+                    }
+
+                    Text {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.top: logoCaption.bottom
+                        font.pointSize: root.font.pointSize * 0.9
+                        font.family: formContainer.fontFamily
+                        color: "#34332B"
+                        opacity: 0.8
+                        wrapMode: Text.WordWrap
+                        text: {
+                            var lines = logoQuote.quoteText.split(/\r?\n/).filter(function(line) { return line.trim().length > 0; });
+                            if (lines.length > 0) {
+                                var idx = Math.floor(Math.random() * lines.length);
+                                var line = lines[idx];
+                                var tildeIdx = line.indexOf("~");
+                                if (tildeIdx !== -1)
+                                    return line.substring(0, tildeIdx).trim();
+                                return line.trim();
+                            }
+                            return "";
+                        }
+                    }
+
+                    Text {
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
+                        font.pointSize: root.font.pointSize * 0.9
+                        font.family: formContainer.fontFamily
+                        color: "#34332B"
+                        opacity: 0.8
+                        text: {
+                            var lines = logoQuote.quoteText.split(/\r?\n/).filter(function(line) { return line.trim().length > 0; });
+                            if (lines.length > 0) {
+                                var idx = Math.floor(Math.random() * lines.length);
+                                var line = lines[idx];
+                                var tildeIdx = line.indexOf("~");
+                                if (tildeIdx !== -1)
+                                    return line.substring(tildeIdx + 1).trim();
+                            }
+                            return "";
+                        }
+                    }
+                }
             }
         }
     }
