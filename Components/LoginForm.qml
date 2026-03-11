@@ -290,7 +290,18 @@ ColumnLayout {
                 Text {
                     id: currentDate
                     anchors.verticalCenter: parent.verticalCenter
-                    text: Qt.formatDate(new Date(), config.DateFormat || "dddd, MMMM d, yyyy")
+                    text: {
+                        var date = new Date();
+                        var day = date.getDate();
+                        var suffix = "th";
+                        if (day % 10 === 1 && day !== 11) suffix = "st";
+                        else if (day % 10 === 2 && day !== 12) suffix = "nd";
+                        else if (day % 10 === 3 && day !== 13) suffix = "rd";
+                        var formattedDate = Qt.formatDate(date, config.dateFormat || "dddd, d of MMMM, yyyy");
+                        // Replace the day number with day+suffix
+                        formattedDate = formattedDate.replace(new RegExp("\\b" + day + "\\b"), day + suffix);
+                        return formattedDate;
+                    }
                     font.pointSize: root.font.pointSize * 1.2
                     font.family: formContainer.fontFamily
                     color: "#34332B"
@@ -328,7 +339,7 @@ ColumnLayout {
 
                 // Optional: System info section
                 Text {
-                    text: sddm.hostName || "YoRHa System"
+                    text: (sddm.hostName || "YoRHa") + " System"
                     anchors.verticalCenter: parent.verticalCenter
                     font.pointSize: root.font.pointSize * 1.2
                     font.family: formContainer.fontFamily
@@ -354,7 +365,15 @@ ColumnLayout {
             running: true
             onTriggered: {
                 currentTime.text = Qt.formatTime(new Date(), config.HourFormat == "12" ? "hh:mm AP" : "HH:mm")
-                currentDate.text = Qt.formatDate(new Date(), config.DateFormat || "dddd, MMMM d, yyyy")
+                var date = new Date();
+                var day = date.getDate();
+                var suffix = "th";
+                if (day % 10 === 1 && day !== 11) suffix = "st";
+                else if (day % 10 === 2 && day !== 12) suffix = "nd";
+                else if (day % 10 === 3 && day !== 13) suffix = "rd";
+                var formattedDate = Qt.formatDate(date, config.DateFormat || "dddd, MMMM d, yyyy");
+                formattedDate = formattedDate.replace(new RegExp("\\b" + day + "\\b"), day + suffix);
+                currentDate.text = formattedDate;
             }
         }
 
