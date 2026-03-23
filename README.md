@@ -10,6 +10,7 @@
 - Random quotes will be fetched from the [Quotes Folder](./Quotes/)
     - The quote file selected can be changed in the [LoginForm.qml](./Components/LoginForm.qml)
     - Every line will be read as a single quote, everything after a tilde (~) will be considered as the source of the quote and will be placed in the bottom right
+- Sound effects play on focus, button press and login (WIP)
 
 ## Installation
 1. Copy the theme folder to `/usr/share/sddm/themes/`
