@@ -22,11 +22,18 @@ import QtQuick 2.11
 import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.4
 import QtGraphicalEffects 1.0
+import QtMultimedia 5.11
 import SddmComponents 2.0 as SDDM
 
 Column {
     id: inputContainer
     Layout.fillWidth: true
+
+    MediaPlayer {
+        id: fieldFocusSound
+        source: Qt.resolvedUrl("../Assets/focus_sound.mp3")
+        volume: 1
+    }
 
     property Control exposeLogin: loginButton
     property bool failed
@@ -215,6 +222,15 @@ Column {
                     }
                 }
             ]
+
+            Connections {
+                target: username
+                onActiveFocusChanged: {
+                    if (username.activeFocus) {
+                        fieldFocusSound.play()
+                    }
+                }
+            }
         }
 
     }
@@ -400,6 +416,15 @@ Column {
                     }
                 }
             ]
+
+            Connections {
+                target: password
+                onActiveFocusChanged: {
+                    if (password.activeFocus) {
+                        fieldFocusSound.play()
+                    }
+                }
+            }
         }
     }
 
