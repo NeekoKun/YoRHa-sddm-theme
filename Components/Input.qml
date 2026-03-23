@@ -31,7 +31,19 @@ Column {
 
     MediaPlayer {
         id: fieldFocusSound
-        source: Qt.resolvedUrl("../Assets/focus_sound.mp3")
+        source: Qt.resolvedUrl("../Assets/focus.mp3")
+        volume: 1
+    }
+
+    MediaPlayer {
+        id: popupOpenSound
+        source: Qt.resolvedUrl("../Assets/open.mp3")
+        volume: 1
+    }
+
+    MediaPlayer {
+        id: popupCloseSound
+        source: Qt.resolvedUrl("../Assets/close.mp3")
         volume: 1
     }
 
@@ -696,6 +708,21 @@ Column {
                 }
             }
         ]
+
+        Connections {
+            target: sessionSelect
+            onActiveFocusChanged: {
+                if (sessionSelect.activeFocus) {
+                    fieldFocusSound.play()
+                }
+            }
+        }
+
+        Connections {
+            target: sessionSelect.popup
+            onOpened: popupOpenSound.play()
+            onClosed: popupCloseSound.play()
+        }
     }
 
     // LOGIN BUTTON
@@ -895,6 +922,15 @@ Column {
                     }
                 }
             ]
+
+            Connections {
+                target: loginButton
+                onActiveFocusChanged: {
+                    if (loginButton.activeFocus) {
+                        fieldFocusSound.play()
+                    }
+                }
+            } //TODO: Add sound for clicking the button, but only if username and password are filled in
 
             Keys.onReturnPressed: clicked()
 
