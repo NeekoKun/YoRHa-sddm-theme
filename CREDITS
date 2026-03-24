@@ -4,11 +4,14 @@ Inherited from sddm-sugar-dark (https://github.com/MarianArlt/sddm-sugar-dark)
 ./Assets/*.png
 Made by hand referencing Nier:Automata (https://www.square-enix-games.com/en_EU/games/nier-automata)
 
-./Assets/*.mp3
+./Assets/*.wav
 Sampled from Nier:Automata (https://www.square-enix-games.com/en_EU/games/nier-automata) and edited by hand
 
 ./Quotes/nier.txt
 Quotes from NieR:Automata (https://www.square-enix-games.com/en_EU/games/nier-automata)
+
+./Fonts/Rodin-Pro-M.otf
+Downloaded from fontsgeek (https://fontsgeek.com/fonts/fot-rodin-pro-m), no license available
 
 All other quotes in ./Quotes
 No idea where I got them from, phrases which I remembered and saved here

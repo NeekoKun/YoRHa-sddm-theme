@@ -14,7 +14,7 @@ ColumnLayout {
 
     FontLoader {
         id: rodinFont
-        source: Qt.resolvedUrl("../fonts/Rodin_Pro_DB.otf") // TODO: Get the correct font (RodinPro M)
+        source: Qt.resolvedUrl("../fonts/Rodin-Pro-M.otf")
     }    
 
     property string fontFamily: rodinFont.name || "Arial"

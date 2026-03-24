@@ -22,8 +22,14 @@ import QtQuick 2.11
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.4
 import QtGraphicalEffects 1.0
+import QtMultimedia 5.11
 
 Item {
+    SoundEffect {
+        id: focusFieldSound
+        source: Qt.resolvedUrl("../Assets/focus.wav")
+        volume: 1
+    }
     id: sessionButton
 
     focus: true
@@ -67,6 +73,7 @@ Item {
 
         onHighlightedIndexChanged: {
             if (popup.visible) {
+                focusFieldSound.play()
                 selectSession.currentIndex = highlightedIndex
             }
         }

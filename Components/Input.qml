@@ -29,21 +29,21 @@ Column {
     id: inputContainer
     Layout.fillWidth: true
 
-    MediaPlayer {
+    SoundEffect {
         id: fieldFocusSound
-        source: Qt.resolvedUrl("../Assets/focus.mp3")
+        source: Qt.resolvedUrl("../Assets/focus.wav")
         volume: 1
     }
 
-    MediaPlayer {
+    SoundEffect {
         id: popupOpenSound
-        source: Qt.resolvedUrl("../Assets/open.mp3")
+        source: Qt.resolvedUrl("../Assets/open.wav")
         volume: 1
     }
 
-    MediaPlayer {
+    SoundEffect {
         id: popupCloseSound
-        source: Qt.resolvedUrl("../Assets/close.mp3")
+        source: Qt.resolvedUrl("../Assets/close.wav")
         volume: 1
     }
 
@@ -199,6 +199,10 @@ Column {
             }
             Keys.onReturnPressed: loginButton.clicked()
             KeyNavigation.down: password
+            Keys.onDownPressed: {
+                fieldFocusSound.play()
+                KeyNavigation.down.forceActiveFocus()
+            }
             z: 1
 
             states: [
@@ -234,17 +238,7 @@ Column {
                     }
                 }
             ]
-
-            Connections {
-                target: username
-                onActiveFocusChanged: {
-                    if (username.activeFocus) {
-                        fieldFocusSound.play()
-                    }
-                }
-            }
         }
-
     }
 
     // PASSWORD INPUT
@@ -395,6 +389,15 @@ Column {
             Keys.onReturnPressed: loginButton.clicked()
             KeyNavigation.down: sessionSelect
 
+            Keys.onDownPressed: {
+                fieldFocusSound.play()
+                KeyNavigation.down.forceActiveFocus()
+            }
+            Keys.onUpPressed: {
+                fieldFocusSound.play()
+                KeyNavigation.up.forceActiveFocus()
+             }
+
             states: [
                 State { // On focus:
                     name: "focused"
@@ -428,15 +431,6 @@ Column {
                     }
                 }
             ]
-
-            Connections {
-                target: password
-                onActiveFocusChanged: {
-                    if (password.activeFocus) {
-                        fieldFocusSound.play()
-                    }
-                }
-            }
         }
     }
 
@@ -448,6 +442,7 @@ Column {
         anchors.left: parent.left
 
         KeyNavigation.down: loginButton
+        KeyNavigation.up: password
 
         // VERTICAL BAR
         Image {
@@ -554,12 +549,23 @@ Column {
             anchors.verticalCenter: parent.verticalCenter
             height: 48
 
+            Keys.onUpPressed: {
+                fieldFocusSound.play()
+                KeyNavigation.up.forceActiveFocus()
+            }
+            Keys.onDownPressed: {
+                fieldFocusSound.play()
+                KeyNavigation.down.forceActiveFocus()
+            }
+
             onPopupOpenedChanged: {
                 if (!popupOpened) {
                     sessionDarkener.width = sessionBackground.width
                     sessionDarkener.opacity = 0.5
+                    popupCloseSound.play()
                 } else {
                     sessionDarkener.opacity = 0.3
+                    popupOpenSound.play()
                 }
             }
 
@@ -708,21 +714,6 @@ Column {
                 }
             }
         ]
-
-        Connections {
-            target: sessionSelect
-            onActiveFocusChanged: {
-                if (sessionSelect.activeFocus) {
-                    fieldFocusSound.play()
-                }
-            }
-        }
-
-        Connections {
-            target: sessionSelect.popup
-            onOpened: popupOpenSound.play()
-            onClosed: popupCloseSound.play()
-        }
     }
 
     // LOGIN BUTTON
@@ -985,8 +976,8 @@ Column {
 
     Connections {
         target: sddm
-        onLoginSucceeded: {}
-        onLoginFailed: {
+        onLoginSucceeded: {} //TODO: Play sound on login success
+        onLoginFailed: { //TODO: Play sound on login failure
             failed = true
             resetError.running ? resetError.stop() && resetError.start() : resetError.start()
         }
