@@ -222,22 +222,123 @@ Pane {
             mipmap: true
         }
 
-        Image {
-            id: horizontalBarTop
-            anchors.left: parent.left
+        // Horizontal Bars
+        Item {
+            id: horizontalTopBarContainer
             anchors.right: parent.right
             anchors.top: parent.top
             anchors.topMargin: 67
-            source: "Assets/horizontal_bar.png"
+            width: 0
+            height: 31
+            clip: true
+
+            RowLayout {
+                id: horizontalTopBarRow
+                anchors.top: parent.top
+                anchors.right: parent.right
+                width: parent.parent.width
+                spacing: 0
+
+                property var tiled_width: ((parent.parent.width - parent.parent.width % 76) / 76 - 1) * 76
+
+                BorderImage {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: false
+                    source: "Assets/horizontal_bar_left.png"
+                    border.top: 0
+                    border.bottom: 0
+                    border.left: 0
+                    border.right: 5
+                }
+
+                // Tiling body
+                Image {
+                    id: horizontalBarTop
+                    source: "Assets/horizontal_bar_tile.png"
+                    Layout.preferredWidth: parent.tiled_width
+                    fillMode: Image.TileHorizontally
+                    horizontalAlignment: Image.AlignLeft
+                }
+
+                BorderImage {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: false
+                    source: "Assets/horizontal_bar_right.png"
+                    border.top: 0
+                    border.bottom: 0
+                    border.left: 6
+                    border.right: 0
+                }
+            }
+
+            NumberAnimation {
+                id: horizontalTopBarSlideInAnimation
+                target: horizontalTopBarContainer
+                property: "width"
+                from: 0
+                to: parent.width
+                duration: 600
+                easing.type: Easing.OutCubic
+            }
         }
 
-        Image {
-            id: horizontalBarBottom
+        Item {
+            id: horizontalBotBarContainer
             anchors.left: parent.left
-            anchors.right: parent.right
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 67
-            source: "Assets/horizontal_bar.png"
+            width: 0
+            height: 31
+            clip: true
+
+            RowLayout {
+                id: horizontalBotBarRow
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                width: parent.parent.width
+                spacing: 0
+
+                property var tiled_width: ((parent.parent.width - parent.parent.width % 76) / 76 - 1) * 76
+
+                BorderImage {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: false
+                    source: "Assets/horizontal_bar_left.png"
+                    border.top: 0
+                    border.bottom: 0
+                    border.left: 0
+                    border.right: 5
+                }
+
+                // Tiling body
+                Image {
+                    id: horizontalBarBottom
+                    source: "Assets/horizontal_bar_tile.png"
+                    Layout.preferredWidth: parent.tiled_width
+                    fillMode: Image.TileHorizontally
+                    horizontalAlignment: Image.AlignLeft
+                }
+
+                BorderImage {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: false
+                    source: "Assets/horizontal_bar_right.png"
+                    border.top: 0
+                    border.bottom: 0
+                    border.left: 6
+                    border.right: 0
+                }
+            }
+
+            NumberAnimation {
+                id: horizontalBotBarSlideInAnimation
+                target: horizontalBotBarContainer
+                property: "width"
+                from: 0
+                to: parent.width
+                duration: 600
+                easing.type: Easing.OutCubic
+            }
         }
 
         // BOTTOM CORNER
@@ -580,6 +681,17 @@ Pane {
         MouseArea {
             anchors.fill: backgroundImage
             onClicked: parent.forceActiveFocus()
+        }
+    }
+
+    // Timer to fire the various animations in order
+    Timer {
+        interval: 100
+        running: true
+        repeat: false
+        onTriggered: {
+            horizontalTopBarSlideInAnimation.start()
+            horizontalBotBarSlideInAnimation.start()
         }
     }
 }

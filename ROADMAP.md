@@ -12,3 +12,4 @@
 
 ## Integration
 - [ ] Test audio-visual synchronization
+- [ ] Cross-compatibility for different screen sizes
