@@ -7,19 +7,36 @@ import QtGraphicalEffects 1.0
 ColumnLayout {
     id: formContainer
     anchors.fill: parent
-    anchors.leftMargin: 63  // Add padding inside the background rectangle
+    anchors.leftMargin: 63
     anchors.rightMargin: 63
 
     SDDM.TextConstants { id: textConstants }
 
     FontLoader {
         id: rodinFont
-        source: Qt.resolvedUrl("../fonts/Rodin_Pro_DB.otf") // TODO: Get the correct font (RodinPro M)
+        source: Qt.resolvedUrl("../fonts/Rodin_Pro_DB.otf") // TODO: Get the correct font (Rodin Pro M)
     }    
 
+    property alias animationTimer: formAnimationsTrigger
     property string fontFamily: rodinFont.name || "Arial"
+    
+    // Typewriter effect properties
+    property int typewriterCharIndex: 0
+    property string randomChar: ""
 
-    spacing: 20  // Add spacing between sections
+    function getTypewriterText(fullText, charCount) {
+        var chars = "abcdefghijklmnopqrstuvwxyz";
+        var typed = fullText.substring(0, Math.min(charCount, fullText.length));
+
+        if (charCount < fullText.length ) {
+            if (fullText.charAt(typed.length) == fullText.charAt(typed.length).toUpperCase()) { // next character is uppercase, probably a new word, add a space for better readability
+                typed += chars.charAt(Math.floor(Math.random() * chars.length)).toUpperCase();
+            } else {
+                typed += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+        }
+        return typed;
+    }
 
     // HEADER - Simple text with HeaderText aligned to the left
     Item {
@@ -27,11 +44,13 @@ ColumnLayout {
         Layout.fillWidth: true
         Layout.preferredHeight: 60
 
+        property var typewriterCharIndex: 0
+
         Text {
             id: headerText
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
-            text: "START SESSION"
+            text: formContainer.getTypewriterText("START SESSION", header.typewriterCharIndex)
             font.family: formContainer.fontFamily
             font.pointSize: root.font.pointSize * 3
             color: "#34332B"
@@ -66,6 +85,7 @@ ColumnLayout {
             id: avatarContainer
             anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter
+            opacity: 0
             width: 440
             height: 540
 
@@ -106,7 +126,7 @@ ColumnLayout {
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.leftMargin: 30
-                        text: "YoRHa"
+                        text: formContainer.getTypewriterText("YoRHa", formContainer.typewriterCharIndex)
                         font.family: formContainer.fontFamily
                         font.pointSize: root.font.pointSize * 1.2
                         color: "#D5CFAF"
@@ -151,7 +171,7 @@ ColumnLayout {
                         font.pointSize: root.font.pointSize * 1.2
                         font.family: formContainer.fontFamily
                         color: "#34332B"
-                        text: "For the Glory of Mankind"
+                        text: formContainer.getTypewriterText("For the Glory of Mankind", formContainer.typewriterCharIndex)
                         opacity: 0.8
                     }
                 }
@@ -209,9 +229,12 @@ ColumnLayout {
                                 var idx = Math.floor(Math.random() * lines.length);
                                 var line = lines[idx];
                                 var tildeIdx = line.indexOf("~");
+                                var fullText = "";
                                 if (tildeIdx !== -1)
-                                    return line.substring(0, tildeIdx).trim();
-                                return line.trim();
+                                    fullText = line.substring(0, tildeIdx).trim();
+                                else
+                                    fullText = line.trim();
+                                return formContainer.getTypewriterText(fullText, formContainer.typewriterCharIndex);
                             }
                             return "";
                         }
@@ -230,13 +253,35 @@ ColumnLayout {
                                 var idx = Math.floor(Math.random() * lines.length);
                                 var line = lines[idx];
                                 var tildeIdx = line.indexOf("~");
+                                var fullText = "";
                                 if (tildeIdx !== -1)
-                                    return line.substring(tildeIdx + 1).trim();
+                                    fullText = line.substring(tildeIdx + 1).trim();
+                                return formContainer.getTypewriterText(fullText, formContainer.typewriterCharIndex);
                             }
                             return "";
                         }
                     }
                 }
+            }
+
+            NumberAnimation {
+                id: avatarContainerFadeIn
+                target: avatarContainer
+                property: "opacity"
+                from: 0
+                to: 1
+                duration: 600
+                easing.type: Easing.OutCubic
+            }
+
+            NumberAnimation {
+                id: avatarContainerSlideIn
+                target: avatarContainer.anchors
+                property: "rightMargin"
+                from: -60
+                to: 0
+                duration: 600
+                easing.type: Easing.OutCubic
             }
         }
     }
@@ -245,7 +290,8 @@ ColumnLayout {
     Rectangle {
         id: infoBoard
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 110
+        anchors.bottomMargin: 0 // Gets modified by animation
+        opacity: 0 // Gets modified by animation
 
         Layout.fillWidth: true
         Layout.preferredHeight: 80
@@ -382,6 +428,72 @@ ColumnLayout {
             radius: 0
             samples: 17
             color: "#45000000"
+        }
+
+        NumberAnimation {
+            id: infoBoardFadeIn
+            target: infoBoard
+            property: "opacity"
+            from: 0
+            to: 1
+            duration: 600
+            easing.type: Easing.OutCubic
+        }
+
+        NumberAnimation {
+            id: infoBoardSlideIn
+            target: infoBoard.anchors
+            property: "bottomMargin"
+            from: -60
+            to: 110
+            duration: 600
+            easing.type: Easing.OutCubic
+        }
+    }
+
+    Timer {
+        id: formAnimationsTrigger
+        running: false
+        interval: 600
+        repeat: false
+        
+        onTriggered: {
+            avatarContainerFadeIn.start()
+            avatarContainerSlideIn.start()
+            infoBoardFadeIn.start()
+            infoBoardSlideIn.start()
+            input.inputAnimationsTrigger.start()
+            typewriterTimer.start()
+        }
+    }
+
+    Timer {
+        id: sessionTypewriterTimer
+        interval: 20
+        repeat: true
+        running: true
+
+        onTriggered: {
+            header.typewriterCharIndex++
+             // Stop once reached a reasonable max length
+            if (header.typewriterCharIndex > 2000) {
+                sessionTypewriterTimer.stop()
+            }
+        }
+    }
+
+    Timer {
+        id: typewriterTimer
+        interval: 20
+        repeat: true
+        running: false
+        
+        onTriggered: {
+            formContainer.typewriterCharIndex++
+            // Stop once reached a reasonable max length
+            if (formContainer.typewriterCharIndex > 20000) {
+                typewriterTimer.stop()
+            }
         }
     }
 }

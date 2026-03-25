@@ -29,12 +29,16 @@ Column {
     Layout.fillWidth: true
 
     property Control exposeLogin: loginButton
+    property alias inputAnimationsTrigger: inputAnimationsTrigger
     property bool failed
     property string fontFamily: "Arial"
+    property var formFunctions: parent.parent
 
     // USERNAME INPUT
     Item {
         id: usernameField
+
+        property int usernameCharIndex: 0
 
         height: root.font.pointSize * 5
         width: 500
@@ -43,13 +47,13 @@ Column {
         // VERTICAL BAR
         Image {
             id: usernameVerticalBar
-            anchors.right: username.left
-            anchors.rightMargin: 34
+            anchors.right: parent.left
+            anchors.rightMargin: -21
             anchors.verticalCenter: loginButton.verticalCenter
             width: 30
             height: parent.height
             source: Qt.resolvedUrl("../Assets/vertical_bar.png")
-            opacity: 0.13
+            opacity: 0
         }
 
         // FOCUS POINTER
@@ -111,15 +115,15 @@ Column {
         // USERNAME SQUARE
         Rectangle {
             id: usernameSquare
-            anchors.left: username.left
+            anchors.left: parent.left
             anchors.top: username.top
             anchors.bottom: username.bottom
-            anchors.leftMargin: 12
+            anchors.leftMargin: 7
             anchors.topMargin: 12
             anchors.bottomMargin: 12
             width: height
             color: root.palette.text
-            opacity: 0.8
+            opacity: 0
             z: 5
         }
 
@@ -128,15 +132,18 @@ Column {
             text: config.ForceLastUser === "true" ? userModel.lastUser : ""
             font.capitalization: Font.Capitalize
             font.family: inputContainer.fontFamily
-            anchors.centerIn: parent
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.leftMargin: 55
             height: 48 
             width: 389 
-            placeholderText: config.TranslateUsernamePlaceholder || textConstants.userName
+            placeholderText: ""
             selectByMouse: true
             horizontalAlignment: TextInput.AlignLeft
             renderType: Text.QtRendering
             color: root.palette.text
-            leftPadding: usernameSquare.width + 2 * usernameSquare.anchors.leftMargin
+            leftPadding: usernameSquare.width + 24
+            opacity: 0
 
             background: Item {
                 Rectangle {
@@ -216,27 +223,31 @@ Column {
                 }
             ]
         }
-
     }
 
     // PASSWORD INPUT
     Item {
         id: passwordField
+        
+        property int passwordCharIndex: 0
+        
         height: root.font.pointSize * 5
         width: 500
         anchors.left: parent.left
 
+        // VERTICAL BAR
         Image {
             id: passwordVerticalBar
-            anchors.right: password.left
-            anchors.rightMargin: 34
+            anchors.right: parent.left
+            anchors.rightMargin: -21
             anchors.verticalCenter: loginButton.verticalCenter
             width: 30
             height: parent.height
             source: Qt.resolvedUrl("../Assets/vertical_bar.png")
-            opacity: 0.13
+            opacity: 0
         }
 
+        // FOCUS POINTER
         Image {
             id: passwordFocusPointer
             anchors.right: password.left
@@ -295,34 +306,37 @@ Column {
         // PASSWORD SQUARE
         Rectangle {
             id: passwordSquare
-            anchors.left: password.left
+            anchors.left: parent.left
             anchors.top: password.top
             anchors.bottom: password.bottom
-            anchors.leftMargin: 12
+            anchors.leftMargin: 7
             anchors.topMargin: 12
             anchors.bottomMargin: 12
             width: height
             color: root.palette.text
-            opacity: 0.8
+            opacity: 0
             z: 5
         }
 
         TextField {
             id: password
-            anchors.centerIn: parent
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.leftMargin: 55
+            opacity: 0
             height: 48
             width: 389
-            focus: config.ForcePasswordFocus == "true" ? true : false
+            focus: false//config.ForcePasswordFocus == "true" ? true : false
             selectByMouse: true
             echoMode: TextInput.Password
-            placeholderText: "Password"
+            placeholderText: ""
             font.family: inputContainer.fontFamily
             horizontalAlignment: TextInput.AlignLeft
-            passwordCharacter: "*"//"•"
+            passwordCharacter: "*"
             passwordMaskDelay: 0
             renderType: Text.QtRendering
             color: root.palette.text
-            leftPadding: passwordSquare.width + 2 * passwordSquare.anchors.leftMargin
+            leftPadding: passwordSquare.width + 24
 
             background: Item {
                 Rectangle {
@@ -406,6 +420,9 @@ Column {
     // SESSION SELECT
     Item {
         id: sessionSelectContainer
+        
+        property int sessionSelectCharIndex: 0
+        
         height: root.font.pointSize * 5
         width: 500
         anchors.left: parent.left
@@ -415,13 +432,13 @@ Column {
         // VERTICAL BAR
         Image {
             id: sessionVerticalBar
-            anchors.right: sessionSelect.left
-            anchors.rightMargin: 34
+            anchors.right: parent.left
+            anchors.rightMargin: -21
             anchors.verticalCenter: sessionSelect.verticalCenter
             width: 30
             height: parent.height
             source: Qt.resolvedUrl("../Assets/vertical_bar.png")
-            opacity: 0.13
+            opacity: 0
         }
 
         // FOCUS POINTER
@@ -497,15 +514,15 @@ Column {
         // SESSION SQUARE
         Rectangle {
             id: sessionSquare
-            anchors.left: sessionSelect.left
+            anchors.left: parent.left
             anchors.top: sessionSelect.top
             anchors.bottom: sessionSelect.bottom
-            anchors.leftMargin: 12
+            anchors.leftMargin: 7
             anchors.topMargin: 12
             anchors.bottomMargin: 12
             width: height
             color: root.palette.text
-            opacity: 0.8
+            opacity: 0
             z: 5
         }
 
@@ -513,7 +530,9 @@ Column {
             id: sessionSelect
             implicitWidth: 389
             anchors.left: parent.left
-            anchors.leftMargin: 55
+            focus: false
+            anchors.leftMargin: -5
+            opacity: 0
             anchors.verticalCenter: parent.verticalCenter
             height: 48
 
@@ -587,12 +606,12 @@ Column {
             Text {
                 id: sessionText
                 anchors.fill: parent
-                text: parent.currentSessionName
+                text: inputContainer.formFunctions.getTypewriterText(parent.currentSessionName, sessionSelectContainer.sessionSelectCharIndex)
                 font.pointSize: root.font.pointSize
                 font.family: inputContainer.fontFamily
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
-                leftPadding: sessionSquare.width + 2 * sessionSquare.anchors.leftMargin
+                leftPadding: sessionSquare.width + 24
                 color: root.palette.text
             }
         }
@@ -680,18 +699,19 @@ Column {
         width: 500
         anchors.left: parent.left
 
+        property int loginCharIndex: 0
         property real opacityMultiplier: (username.text.length > 0 && password.text.length > 0) ? 1 : 0.6
 
         // VERTICAL BAR
         Image {
             id: loginVerticalBar
-            anchors.right: loginButton.left
-            anchors.rightMargin: 34
+            anchors.right: parent.left
+            anchors.rightMargin: -21
             anchors.verticalCenter: loginButton.verticalCenter
             width: 30
             height: parent.height
             source: Qt.resolvedUrl("../Assets/vertical_bar.png")
-            opacity: 0.13
+            opacity: 0
         }
 
         // FOCUS POINTER
@@ -753,10 +773,10 @@ Column {
         // LOGIN SQUARE
         Rectangle {
             id: loginSquare
-            anchors.left: loginButton.left
+            anchors.left: parent.left
             anchors.top: loginButton.top
             anchors.bottom: loginButton.bottom
-            anchors.leftMargin: 12
+            anchors.leftMargin: -root.width
             anchors.topMargin: 12
             anchors.bottomMargin: 12
             width: height
@@ -767,18 +787,20 @@ Column {
 
         Button {
             id: loginButton
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.centerIn: parent
+            anchors.left: parent.left
+            anchors.leftMargin: -5
+            anchors.verticalCenter: parent.verticalCenter
             text: "Login"
             height: 48
             width: 389
             implicitWidth: parent.width
             enabled: true
             hoverEnabled: true
+            opacity: 0
 
             contentItem: Text {
-                text: parent.text
-                leftPadding: loginSquare.width + 2 * loginSquare.anchors.leftMargin - 7
+                text: inputContainer.formFunctions.getTypewriterText(loginButton.text, login.loginCharIndex)
+                leftPadding: loginSquare.width + 24 - 7
                 color: root.palette.text
                 opacity: login.opacityMultiplier
                 font.pointSize: root.font.pointSize
@@ -928,6 +950,301 @@ Column {
         onLoginFailed: {
             failed = true
             resetError.running ? resetError.stop() && resetError.start() : resetError.start()
+        }
+    }
+
+    ParallelAnimation {
+        id: animationSequence
+
+        // USERNAME ANIMATIONS
+        SequentialAnimation {
+            id: usernameAnimations
+            
+            ParallelAnimation {
+                NumberAnimation {
+                    target: usernameSquare
+                    property: "opacity"
+                    from: 0
+                    to: 0.8
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: usernameSquare.anchors
+                    property: "leftMargin"
+                    from: 7
+                    to: 67
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: username
+                    property: "opacity"
+                    from: 0
+                    to: 1
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: username.anchors
+                    property: "leftMargin"
+                    from: -5
+                    to: 55
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: usernameVerticalBar
+                    property: "opacity"
+                    from: 0
+                    to: 0.13
+                    duration: 200
+                }
+            }
+            
+            ScriptAction {
+                script: usernameTypewriterTimer.start()
+            }
+        }
+
+        // PASSWORD ANIMATIONS
+        SequentialAnimation {
+            PauseAnimation { duration: 100 }
+            
+            ParallelAnimation {
+                NumberAnimation {
+                    target: passwordSquare
+                    property: "opacity"
+                    from: 0
+                    to: 0.8
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: passwordSquare.anchors
+                    property: "leftMargin"
+                    from: 7
+                    to: 67
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: password
+                    property: "opacity"
+                    from: 0
+                    to: 1
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: password.anchors
+                    property: "leftMargin"
+                    from: -5
+                    to: 55
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: passwordVerticalBar
+                    property: "opacity"
+                    from: 0
+                    to: 0.13
+                    duration: 200
+                }
+            }
+
+            ScriptAction {
+                script: {
+                    if (config.ForcePasswordFocus === "true") {
+                        password.focus = true
+                    }
+                    passwordTypewriterTimer.start()
+                }
+            }
+        }
+
+        // SESSION SELECT ANIMATIONS
+        SequentialAnimation {
+            PauseAnimation { duration: 200 }
+            ParallelAnimation {
+                NumberAnimation {
+                    target: sessionSquare
+                    property: "opacity"
+                    from: 0
+                    to: 0.8
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: sessionSquare.anchors
+                    property: "leftMargin"
+                    from: 7
+                    to: 67
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: sessionSelect
+                    property: "opacity"
+                    from: 0
+                    to: 1
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: sessionSelect.anchors
+                    property: "leftMargin"
+                    from: -5
+                    to: 55
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: sessionVerticalBar
+                    property: "opacity"
+                    from: 0
+                    to: 0.13
+                    duration: 200
+                }
+            }
+            
+            ScriptAction {
+                script: sessionSelectTypewriterTimer.start()
+            }
+        }
+
+        // LOGIN BUTTON ANIMATIONS
+        SequentialAnimation {
+            PauseAnimation { duration: 300 }
+            ParallelAnimation {
+                NumberAnimation {
+                    target: loginSquare
+                    property: "opacity"
+                    from: 0
+                    to: login.opacityMultiplier
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: loginSquare.anchors
+                    property: "leftMargin"
+                    from: 7
+                    to: 67
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: loginButton
+                    property: "opacity"
+                    from: 0
+                    to: 1
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: loginButton.anchors
+                    property: "leftMargin"
+                    from: -5
+                    to: 55
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: loginVerticalBar
+                    property: "opacity"
+                    from: 0
+                    to: 0.13
+                    duration: 200
+                }
+            }
+            
+            ScriptAction {
+                script: loginTypewriterTimer.start()
+            }
+        }
+    }
+
+    Timer {
+        id: inputAnimationsTrigger
+        interval: 100
+        running: false
+        repeat: false
+
+        onTriggered: {
+            animationSequence.start()
+        }
+    }
+
+    Timer {
+        id: usernameTypewriterTimer
+        interval: 20
+        running: false
+        repeat: true
+
+        onTriggered: {
+            usernameField.usernameCharIndex++
+            // Update the placeholder text directly
+            var placeholder = config.TranslateUsernamePlaceholder || textConstants.userName;
+            username.placeholderText = inputContainer.formFunctions.getTypewriterText(placeholder, usernameField.usernameCharIndex);
+            
+            // Stop once reached a reasonable max length
+            if (usernameField.usernameCharIndex > 2000) {
+                usernameTypewriterTimer.stop()
+            }
+        }
+    }
+
+    Timer {
+        id: passwordTypewriterTimer
+        interval: 20
+        running: false
+        repeat: true
+
+        onTriggered: {
+            passwordField.passwordCharIndex++
+            // Update the placeholder text directly
+            var placeholder = "Password"
+            password.placeholderText = inputContainer.formFunctions.getTypewriterText(placeholder, passwordField.passwordCharIndex);
+            
+            // Stop once reached a reasonable max length
+            if (passwordField.passwordCharIndex > 2000) {
+                passwordTypewriterTimer.stop()
+            }
+        }
+    }
+
+    Timer {
+        id: sessionSelectTypewriterTimer
+        interval: 20
+        running: false
+        repeat: true
+
+        onTriggered: {
+            sessionSelectContainer.sessionSelectCharIndex++
+            // Update the text directly
+            sessionText.text = inputContainer.formFunctions.getTypewriterText(sessionSelect.currentSessionName, sessionSelectContainer.sessionSelectCharIndex);
+            
+            // Stop once reached a reasonable max length
+            if (sessionSelectContainer.sessionSelectCharIndex > 2000) {
+                sessionSelectTypewriterTimer.stop()
+            }
+        }
+    }
+
+    Timer {
+        id: loginTypewriterTimer
+        interval: 20
+        running: false
+        repeat: true
+
+        onTriggered: {
+            login.loginCharIndex++
+            // The contentItem text already binds to login.loginCharIndex, so just incrementing it will update the display
+            
+            // Stop once reached a reasonable max length
+            if (login.loginCharIndex > 2000) {
+                loginTypewriterTimer.stop()
+            }
         }
     }
 

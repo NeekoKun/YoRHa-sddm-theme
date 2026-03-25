@@ -33,6 +33,9 @@ Item {
     property string textConstantSession
     property bool popupOpened: selectSession.popup.visible
 
+    property var formFunctions: parent.parent.formFunctions
+    property int sessionCharIndex: 0
+
     readonly property string currentSessionName: selectSession.currentText
 
     KeyNavigation.right: selectSession
@@ -60,8 +63,11 @@ Item {
         onActiveFocusChanged: {
             if (activeFocus) {
                 popup.open()
+                sessionTypewriterTimer.start()
             } else {
                 popup.close()
+                sessionTypewriterTimer.stop()
+                sessionButton.sessionCharIndex = 0
             }
         }
 
@@ -222,7 +228,8 @@ Item {
                     }
 
                     Text {
-                        text: model.name
+                        id: itemText
+                        text: sessionButton.formFunctions.getTypewriterText(model.name, sessionButton.sessionCharIndex)
                         leftPadding: itemSquare.width + 2 * itemSquare.anchors.leftMargin
                         font.pointSize: root.font.pointSize
                         font.family: inputContainer.fontFamily
@@ -288,6 +295,21 @@ Item {
 
             enter: Transition {
                 NumberAnimation { property: "opacity"; from: 0; to: 1 }
+            }
+        }
+    }
+
+    Timer {
+        id: sessionTypewriterTimer
+        interval: 20
+        running: false
+        repeat: true
+
+        onTriggered: {
+            sessionButton.sessionCharIndex++
+            // Stop once reached a reasonable max length
+            if (sessionButton.sessionCharIndex > 2000) {
+                sessionTypewriterTimer.stop()
             }
         }
     }

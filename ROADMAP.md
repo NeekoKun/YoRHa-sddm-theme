@@ -11,14 +11,21 @@
     - [x] Horizontal Bars
     - [x] Diagonal Lines
     - [x] Circles
-    - [ ] Panels
+    - [x] Panels
     - [ ] Triangle Grid
+    - [ ] Text typing
 - [ ] Smooth exit transition
-    - [x] Horizontal Bars
-    - [x] Diagonal Lines
-    - [x] Circles
+    - [ ] Horizontal Bars
+    - [ ] Diagonal Lines
+    - [ ] Circles
     - [ ] Panels
     - [ ] Triangle Grid
+
+## Tabs
+- [ ] Main login
+- [ ] System Control (shutdown/hibernate/suspend/reboot)
+- [ ] System Info
+- [ ] idk
 
 ## Integration
 - [ ] Test audio-visual synchronization

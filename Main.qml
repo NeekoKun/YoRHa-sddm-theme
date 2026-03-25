@@ -73,7 +73,7 @@ Pane {
         LoginForm {
             id: form
 
-            height: virtualKeyboard.state == "visible" ? parent.height - virtualKeyboard.implicitHeight : parent.height
+            height: parent.height
             width: parent.width
             anchors.horizontalCenter: config.FormPosition == "center" ? parent.horizontalCenter : undefined
             anchors.left:parent.left
@@ -81,6 +81,7 @@ Pane {
             z: 1
         }
 
+        // "Wallpaper"
         Image {
             id: backgroundImage
 
@@ -717,6 +718,8 @@ Pane {
             firstTopDiagonalBarWidthAnim.start()
             secondTopDiagonalBarWidthAnim.start()
             thirdTopDiagonalBarWidthAnim.start()
+
+            form.animationTimer.start()
         }
     }
 }
