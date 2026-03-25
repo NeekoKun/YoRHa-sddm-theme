@@ -351,6 +351,20 @@ Pane {
             anchors.bottomMargin: -120
             source: "Assets/diagonal_line.png"
             opacity: 0.13
+            fillMode: Image.PreserveAspectCrop
+            horizontalAlignment: Image.AlignRight
+            verticalAlignment: Image.AlignBottom
+            width: 0
+
+            NumberAnimation {
+                id: firstDiagonalBarWidthAnim
+                target: firstDiagonalBar
+                property: "width"
+                from: 0
+                to: 1200
+                duration: 800
+                easing.type: Easing.Linear
+            }
 
             PropertyAnimation {
                 id: rightMarginAnim
@@ -397,6 +411,20 @@ Pane {
             anchors.bottomMargin: -20
             source: "Assets/diagonal_line.png"
             opacity: 0.13
+            fillMode: Image.PreserveAspectCrop
+            horizontalAlignment: Image.AlignRight
+            verticalAlignment: Image.AlignBottom
+            width: 0
+
+            NumberAnimation {
+                id: secondDiagonalBarWidthAnim
+                target: secondDiagonalBar
+                property: "width"
+                from: 0
+                to: 1200
+                duration: 800
+                easing.type: Easing.Linear
+            }
 
             PropertyAnimation {
                 id: rightMarginAnim2
@@ -443,6 +471,20 @@ Pane {
             anchors.bottomMargin: -120
             source: "Assets/diagonal_line.png"
             opacity: 0.13
+            fillMode: Image.PreserveAspectCrop
+            horizontalAlignment: Image.AlignRight
+            verticalAlignment: Image.AlignBottom
+            width: 0
+
+            NumberAnimation {
+                id: thirdDiagonalBarWidthAnim
+                target: thirdDiagonalBar
+                property: "width"
+                from: 0
+                to: 1200
+                duration: 800
+                easing.type: Easing.Linear
+            }
 
             PropertyAnimation {
                 id: rightMarginAnim3
@@ -533,7 +575,21 @@ Pane {
             anchors.leftMargin: -180
             anchors.topMargin: -220
             source: "Assets/diagonal_line.png"
+            fillMode: Image.PreserveAspectCrop
+            horizontalAlignment: Image.AlignLeft
+            verticalAlignment: Image.AlignTop
             opacity: 0.13
+            width: 0
+
+            NumberAnimation {
+                id: firstTopDiagonalBarWidthAnim
+                target: firstTopDiagonalBar
+                property: "width"
+                from: 0
+                to: 1200
+                duration: 800
+                easing.type: Easing.Linear
+            }
 
             PropertyAnimation {
                 id: leftMarginAnim
@@ -580,6 +636,20 @@ Pane {
             anchors.topMargin: -20
             source: "Assets/diagonal_line.png"
             opacity: 0.13
+            fillMode: Image.PreserveAspectCrop
+            horizontalAlignment: Image.AlignLeft
+            verticalAlignment: Image.AlignTop
+            width: 0
+
+            NumberAnimation {
+                id: secondTopDiagonalBarWidthAnim
+                target: secondTopDiagonalBar
+                property: "width"
+                from: 0
+                to: 1200
+                duration: 800
+                easing.type: Easing.Linear
+            }
 
             PropertyAnimation {
                 id: leftMarginAnim2
@@ -626,6 +696,20 @@ Pane {
             anchors.topMargin: -60
             source: "Assets/diagonal_line.png"
             opacity: 0.13
+            fillMode: Image.PreserveAspectCrop
+            horizontalAlignment: Image.AlignLeft
+            verticalAlignment: Image.AlignTop
+            width: 0
+
+            NumberAnimation {
+                id: thirdTopDiagonalBarWidthAnim
+                target: thirdTopDiagonalBar
+                property: "width"
+                from: 0
+                to: 1200
+                duration: 800
+                easing.type: Easing.Linear
+            }
 
             PropertyAnimation {
                 id: leftMarginAnim3
@@ -739,6 +823,13 @@ Pane {
             secondTopCircleRotationAnim.start()
             firstBottomCircleRotationAnim.start()
             secondBottomCircleRotationAnim.start()
+
+            firstDiagonalBarWidthAnim.start()
+            secondDiagonalBarWidthAnim.start()
+            thirdDiagonalBarWidthAnim.start()
+            firstTopDiagonalBarWidthAnim.start()
+            secondTopDiagonalBarWidthAnim.start()
+            thirdTopDiagonalBarWidthAnim.start()
         }
     }
 }
