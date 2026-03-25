@@ -356,12 +356,9 @@ Column {
             opacity: 0
             height: 48 //TODO: Relative scaling
             width: 389 //TODO: Relative scaling
-            focus: false//config.ForcePasswordFocus == "true" ? true : false
+            focus: false
             anchors.centerIn: parent
             activeFocusOnTab: false
-            height: 48
-            width: 389
-            focus: config.ForcePasswordFocus == "true" ? true : false
             selectByMouse: true
             echoMode: TextInput.Password
             placeholderText: ""
