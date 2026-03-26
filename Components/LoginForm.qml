@@ -67,32 +67,38 @@ ColumnLayout {
         property var typewriterCharIndex: 0
 
         Text {
+            id: headerTextShadow
+            anchors.left: parent.left
+            anchors.leftMargin: 5
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenterOffset: 5
+            text: formContainer.getTypewriterText("START SESSION", header.typewriterCharIndex)
+            font.family: formContainer.fontFamily
+            font.pointSize: sizeHelper.height / 27
+            color: "#000000"
+            opacity: 0.27
+            z: 0
+        }
+
+        Text {
             id: headerText
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
             text: formContainer.getTypewriterText("START SESSION", header.typewriterCharIndex)
             font.family: formContainer.fontFamily
-            font.pointSize: root.font.pointSize * 3
+            font.pointSize: sizeHelper.height / 27
             color: "#34332B"
             opacity: 0.8
-
-            layer.enabled: true
-            layer.effect: DropShadow {
-                anchors.fill: headerText
-                horizontalOffset: 5 //TODO: Relative scaling
-                verticalOffset: 5 //TODO: Relative scaling
-                radius: 0
-                samples: 16
-                color: "#45000000"
-            }
+            z: 1
         }
     }
 
+    // Input and Avatar
     Row {
         width: parent.width
         Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
         Layout.fillWidth: true
-        Layout.preferredHeight: root.height / 10
+        Layout.preferredHeight: sizeHelper.height / 10
         Layout.leftMargin: 10 //TODO: Relative scaling
         // INPUT - Input fields aligned to the left
         Input {
@@ -148,7 +154,7 @@ ColumnLayout {
                         anchors.leftMargin: 30 //TODO: Relative scaling
                         text: formContainer.getTypewriterText("YoRHa", formContainer.typewriterCharIndex)
                         font.family: formContainer.fontFamily
-                        font.pointSize: root.font.pointSize * 1.2
+                        font.pointSize: sizeHelper.height / 67
                         color: "#D5CFAF"
                         opacity: 0.9
                     }
@@ -188,7 +194,7 @@ ColumnLayout {
                     height: 47 //TODO: Relative scaling
 
                     Text {
-                        font.pointSize: root.font.pointSize * 1.2
+                        font.pointSize: sizeHelper.height / 67
                         font.family: formContainer.fontFamily
                         color: "#34332B"
                         text: formContainer.getTypewriterText("For the Glory of Mankind", formContainer.typewriterCharIndex)
@@ -238,7 +244,7 @@ ColumnLayout {
                         anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.top: logoCaption.bottom
-                        font.pointSize: root.font.pointSize * 0.9
+                        font.pointSize: sizeHelper.height / 80
                         font.family: formContainer.fontFamily
                         color: "#34332B"
                         opacity: 0.8
@@ -263,7 +269,7 @@ ColumnLayout {
                     Text {
                         anchors.right: parent.right
                         anchors.bottom: parent.bottom
-                        font.pointSize: root.font.pointSize * 0.9
+                        font.pointSize: sizeHelper.height / 80
                         font.family: formContainer.fontFamily
                         color: "#34332B"
                         opacity: 0.8
@@ -307,168 +313,31 @@ ColumnLayout {
     }
 
     // INFOBOARD - Box with current time and date, fills horizontally
-    Rectangle {
+    Footer {
         id: infoBoard
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0 // Gets modified by animation
         opacity: 0 // Gets modified by animation
+    }
 
-        Layout.fillWidth: true
-        Layout.preferredHeight: 80 //TODO: Relative scaling
+    NumberAnimation {
+        id: infoBoardFadeIn
+        target: infoBoard
+        property: "opacity"
+        from: 0
+        to: 1
+        duration: 600
+        easing.type: Easing.OutCubic
+    }
 
-        color: "#D5CFAF"
-
-        Image {
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            source: Qt.resolvedUrl("../Assets/vertical_bar.png")
-            opacity: 0.7
-        }
-
-        Rectangle {
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            anchors.rightMargin: 10
-            anchors.bottomMargin: 10
-
-            width: 20
-            height: 20
-            color: "#000000"
-            opacity: 0.7
-        }
-
-        Row {
-            anchors.fill: parent
-            anchors.leftMargin: 60 //TODO: Relative scaling
-
-            Row {  // Time & Date
-                anchors.left: parent.left
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.margins: 15 //TODO: Relative scaling
-                spacing: 20 //TODO: Relative scaling
-
-                // DATE
-                Text {
-                    id: currentDate
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: {
-                        var date = new Date();
-                        var day = date.getDate();
-                        var suffix = "th";
-                        if (day % 10 === 1 && day !== 11) suffix = "st";
-                        else if (day % 10 === 2 && day !== 12) suffix = "nd";
-                        else if (day % 10 === 3 && day !== 13) suffix = "rd";
-                        var formattedDate = Qt.formatDate(date, config.dateFormat || "dddd, d of MMMM, yyyy");
-                        // Replace the day number with day+suffix
-                        formattedDate = formattedDate.replace(new RegExp("\\b" + day + "\\b"), day + suffix);
-                        return formattedDate;
-                    }
-                    font.pointSize: root.font.pointSize * 1.2
-                    font.family: formContainer.fontFamily
-                    color: "#34332B"
-                    opacity: 0.8
-                }
-
-                // Separator
-                Rectangle {
-                    width: 2 //TODO: Relative scaling
-                    height: parent.height * 0.7
-                    anchors.verticalCenter: parent.verticalCenter
-                    color: "#34332B"
-                    opacity: 0.8
-                }
-
-                // TIME
-                Text {
-                    id: currentTime
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: Qt.formatTime(new Date(), "HH:mm")
-                    font.pointSize: root.font.pointSize * 1.2
-                    font.family: formContainer.fontFamily
-                    color: "#34332B"
-                    opacity: 0.8
-                }
-
-                // Separator
-                Rectangle {
-                    width: 2 //TODO: Relative scaling
-                    height: parent.height * 0.7
-                    anchors.verticalCenter: parent.verticalCenter
-                    color: "#34332B"
-                    opacity: 0.8
-                }
-
-                // Optional: System info section
-                Text {
-                    text: (sddm.hostName || "YoRHa") + " System"
-                    anchors.verticalCenter: parent.verticalCenter
-                    font.pointSize: root.font.pointSize * 1.2
-                    font.family: formContainer.fontFamily
-                    color: "#34332B"
-                    opacity: 0.8
-                }
-            }
-
-            SystemButtons {
-                anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.rightMargin: 60 //TODO: Relative scaling
-                exposedLogin: input.exposeLogin
-                spacing: 20 //TODO: Relative scaling
-            }
-        }
-
-        // Timer to update time every second
-        Timer {
-            interval: 1000
-            repeat: true
-            running: true
-            onTriggered: {
-                currentTime.text = Qt.formatTime(new Date(), config.HourFormat == "12" ? "hh:mm AP" : "HH:mm")
-                var date = new Date();
-                var day = date.getDate();
-                var suffix = "th";
-                if (day % 10 === 1 && day !== 11) suffix = "st";
-                else if (day % 10 === 2 && day !== 12) suffix = "nd";
-                else if (day % 10 === 3 && day !== 13) suffix = "rd";
-                var formattedDate = Qt.formatDate(date, config.DateFormat || "dddd, MMMM d, yyyy");
-                formattedDate = formattedDate.replace(new RegExp("\\b" + day + "\\b"), day + suffix);
-                currentDate.text = formattedDate;
-            }
-        }
-
-        layer.enabled: true
-        layer.effect: DropShadow {
-            transparentBorder: true
-            horizontalOffset: 4 //TODO: Relative scaling
-            verticalOffset: 4 //TODO: Relative scaling
-            radius: 0
-            samples: 17
-            color: "#45000000"
-        }
-
-        NumberAnimation {
-            id: infoBoardFadeIn
-            target: infoBoard
-            property: "opacity"
-            from: 0
-            to: 1
-            duration: 600
-            easing.type: Easing.OutCubic
-        }
-
-        NumberAnimation {
-            id: infoBoardSlideIn
-            target: infoBoard.anchors
-            property: "bottomMargin"
-            from: -60 //TODO: Relative scaling
-            to: 110 //TODO: Relative scaling
-            duration: 600
-            easing.type: Easing.OutCubic
-        }
+    NumberAnimation {
+        id: infoBoardSlideIn
+        target: infoBoard.anchors
+        property: "bottomMargin"
+        from: -60 //TODO: Relative scaling
+        to: 110 //TODO: Relative scaling
+        duration: 600
+        easing.type: Easing.OutCubic
     }
 
     Timer {

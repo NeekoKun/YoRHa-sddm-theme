@@ -236,7 +236,7 @@ Item {
                         id: itemText
                         text: sessionButton.formFunctions.getTypewriterText(model.name, sessionButton.sessionCharIndex)
                         leftPadding: itemSquare.width + 2 * itemSquare.anchors.leftMargin
-                        font.pointSize: root.font.pointSize
+                        font.pointSize: 15
                         font.family: inputContainer.fontFamily
                         color: selectSession.highlightedIndex === index ? "#C9C3A3" : "#34332B"
                         verticalAlignment: Text.AlignVCenter

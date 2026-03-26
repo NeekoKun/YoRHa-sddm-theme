@@ -14,6 +14,10 @@
     - [x] Panels
     - [ ] Triangle Grid
     - [ ] Text typing
+        - [x] Header
+        - [x] Input
+        - [x] Avatar
+        - [ ] Footer
 - [ ] Smooth exit transition
     - [ ] Horizontal Bars
     - [ ] Diagonal Lines
@@ -31,3 +35,4 @@
 - [ ] Test audio-visual synchronization
 - [ ] Cross-compatibility for different screen sizes
     - [ ] Convert images into built-ins when possible for better scaling
+    - [ ] Correct text upscaling

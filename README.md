@@ -9,6 +9,7 @@
     - The quote file selected can be changed in the [LoginForm.qml](./Components/LoginForm.qml)
     - Every line will be read as a single quote, everything after a tilde (~) will be considered as the source of the quote and will be placed in the bottom right
 - Sound effects play on focus, button press and login (WIP)
+- Scales to higher resolutions. If you have a 16:9 instead of a 16:10 monitor, change the height in the sizeHelper in [Main.qml](./Main.qml) from 1200 to 1080
 
 ## Installation
 1. Clone the repository in `/usr/share/sddm/themes`

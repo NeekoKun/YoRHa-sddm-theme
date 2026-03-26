@@ -71,11 +71,8 @@ Pane {
     Item {
         id: sizeHelper
 
-        height: 1080
+        height: 1200
         width: 1920
-
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
 
         LoginForm {
             id: form

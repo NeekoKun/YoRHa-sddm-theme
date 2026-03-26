@@ -66,7 +66,7 @@ Column {
 
         property int usernameCharIndex: 0
 
-        height: root.font.pointSize * 5
+        height: 75
         width: 500 //TODO: Relative scaling
         anchors.left: parent.left
 
@@ -261,7 +261,7 @@ Column {
         
         property int passwordCharIndex: 0
         
-        height: root.font.pointSize * 5
+        height: 15 * 5
         width: 500 //TODO: Relative scaling
         anchors.left: parent.left
 
@@ -464,7 +464,7 @@ Column {
         
         property int sessionSelectCharIndex: 0
         
-        height: root.font.pointSize * 5
+        height: 15 * 5
         width: 500 //TODO: Relative scaling
         anchors.left: parent.left
 
@@ -661,7 +661,7 @@ Column {
                 id: sessionText
                 anchors.fill: parent
                 text: inputContainer.formFunctions.getTypewriterText(parent.currentSessionName, sessionSelectContainer.sessionSelectCharIndex)
-                font.pointSize: root.font.pointSize
+                font.pointSize: 15
                 font.family: inputContainer.fontFamily
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
@@ -749,7 +749,7 @@ Column {
     // LOGIN BUTTON
     Item {
         id: login
-        height: root.font.pointSize * 5
+        height: 15 * 5
         width: 500 //TODO: Relative scaling
         anchors.left: parent.left
 
@@ -858,7 +858,7 @@ Column {
                 leftPadding: loginSquare.width + 24 - 7 //TODO: Relative scaling
                 color: root.palette.text
                 opacity: login.opacityMultiplier
-                font.pointSize: root.font.pointSize
+                font.pointSize: 15
                 font.family: inputContainer.fontFamily
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
@@ -962,7 +962,7 @@ Column {
 
     // ERROR FIELD
     Item {
-        height: root.font.pointSize * 2.3
+        height: 15 * 2.3
         width: parent.width / 2
         anchors.left: parent.left
         Label {
@@ -970,7 +970,7 @@ Column {
             width: parent.width
             text: failed ? config.TranslateLoginFailed || textConstants.loginFailed + "!" : keyboard.capsLock ? textConstants.capslockWarning : null
             horizontalAlignment: Text.AlignHCenter
-            font.pointSize: root.font.pointSize * 0.8
+            font.pointSize: 15 * 0.8
             font.italic: true
             color: root.palette.text
             opacity: 0
