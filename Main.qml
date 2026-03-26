@@ -66,6 +66,297 @@ Pane {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
 
+        // Mask source Item - must be defined at sizeHelper level for timer access
+        Item {
+            id: mask
+            anchors.fill: parent
+            width: sizeHelper.width
+            height: sizeHelper.height
+            z: -1
+
+            signal linesAnimationTrigger()
+
+            // TOP HORIZONTAL BAR
+            Rectangle {
+                id: topHorizontalLine
+                anchors.verticalCenter: parent.top
+                anchors.right: parent.right
+                anchors.verticalCenterOffset: 120
+                width: 0
+                height: 3
+                color: "#000000"
+
+                Behavior on width {
+                    NumberAnimation {
+                        duration: 300
+                        easing.type: Easing.OutCubic
+                    }
+                }
+
+                Connections {
+                    target: mask
+                    onLinesAnimationTrigger: {
+                        topHorizontalLine.width = sizeHelper.width
+                    }
+                }
+            }
+
+            // BOTTOM HORIZONTAL BAR
+            Rectangle {
+                id: bottomHorizontalLine
+                anchors.verticalCenter: parent.bottom
+                anchors.left: parent.left
+                anchors.verticalCenterOffset: -120
+                width: 0
+                height: 3
+                color: "#000000"
+
+                Behavior on width {
+                    NumberAnimation {
+                        duration: 300
+                        easing.type: Easing.OutCubic
+                    }
+                }
+
+                Connections {
+                    target: mask
+                    onLinesAnimationTrigger: {
+                        bottomHorizontalLine.width = sizeHelper.width
+                    }
+                }
+            }
+
+            // TOP LEFT DIAGONALS
+            Rectangle {
+                id: topLeftDiagonal1
+                anchors.verticalCenter: parent.top
+                anchors.left: parent.left
+                transformOrigin: Item.Left
+                rotation: 45
+                width: 0
+                height: 3
+                color: "#000000"
+
+                Behavior on width {
+                    NumberAnimation {
+                        duration: 300
+                        easing.type: Easing.OutCubic
+                    }
+                }
+
+                Connections {
+                    target: mask
+                    onLinesAnimationTrigger: {
+                        topLeftDiagonal1.width = 1528 // sqrt(2 * 1080^2)
+                    }
+                }
+            }
+            
+            Rectangle {
+                id: topLeftDiagonal2
+                anchors.verticalCenter: parent.top
+                anchors.left: parent.left
+                transformOrigin: Item.Left
+                anchors.leftMargin: 240
+                rotation: 45
+                width: 0
+                height: 3
+                color: "#000000"
+
+                Behavior on width {
+                    NumberAnimation {
+                        duration: 300
+                        easing.type: Easing.OutCubic
+                    }
+                }
+
+                Connections {
+                    target: mask
+                    onLinesAnimationTrigger: {
+                        topLeftDiagonal2.width = 1528 // sqrt(2 * 1080^2)
+                    }
+                }
+            }
+
+            // TOP RIGHT DIAGONALS
+            Rectangle {
+                id: topRightDiagonal1
+                anchors.verticalCenter: parent.top
+                anchors.right: parent.right
+                transformOrigin: Item.Right
+                rotation: -45
+                width: 0
+                height: 3
+                color: "#000000"
+
+                Behavior on width {
+                    NumberAnimation {
+                        duration: 300
+                        easing.type: Easing.OutCubic
+                    }
+                }
+
+                Connections {
+                    target: mask
+                    onLinesAnimationTrigger: {
+                        topRightDiagonal1.width = 1528 // sqrt(2 * 1080^2)
+                    }
+                }
+            }
+
+            Rectangle {
+                id: topRightDiagonal2
+                anchors.verticalCenter: parent.top
+                anchors.right: parent.right
+                transformOrigin: Item.Right
+                anchors.rightMargin: 240
+                rotation: -45
+                width: 0
+                height: 3
+                color: "#000000"
+
+                Behavior on width {
+                    NumberAnimation {
+                        duration: 300
+                        easing.type: Easing.OutCubic
+                    }
+                }
+
+                Connections {
+                    target: mask
+                    onLinesAnimationTrigger: {
+                        topRightDiagonal2.width = 1528 // sqrt(2 * 1080^2)
+                    }
+                }
+            }
+
+            // BOTTOM LEFT DIAGONAL
+            Rectangle {
+                id: bottomLeftDiagonal
+                anchors.verticalCenter: parent.bottom
+                anchors.left: parent.left
+                transformOrigin: Item.Left
+                rotation: -45
+                width: 0
+                height: 3
+                color: "#000000"
+
+                Behavior on width {
+                    NumberAnimation {
+                        duration: 300
+                        easing.type: Easing.OutCubic
+                    }
+                }
+
+                Connections {
+                    target: mask
+                    onLinesAnimationTrigger: {
+                        bottomLeftDiagonal.width = 1528 // sqrt(2 * 1080^2)
+                    }
+                }
+            }
+
+            // BOTTOM RIGHT DIAGONAL
+            Rectangle {
+                id: bottomRightDiagonal
+                anchors.verticalCenter: parent.bottom
+                anchors.right: parent.right
+                transformOrigin: Item.Right
+                rotation: 45
+                width: 0
+                height: 3
+                color: "#000000"
+
+                Behavior on width {
+                    NumberAnimation {
+                        duration: 300
+                        easing.type: Easing.OutCubic
+                    }
+                }
+
+                Connections {
+                    target: mask
+                    onLinesAnimationTrigger: {
+                        bottomRightDiagonal.width = 1528 // sqrt(2 * 1080^2)
+                    }
+                }
+            }
+
+            Repeater {
+                model: 17 * 9
+
+                Image {
+                    id: triangleInstance
+                    opacity: 0
+                    property int idx: index
+
+                    x: (idx % 17) * (sizeHelper.width / 16)
+                    y: Math.floor(idx / 17) * (sizeHelper.height / 9)
+
+                    source: Qt.resolvedUrl("../Assets/triangle.png")
+                    horizontalAlignment: Image.AlignHCenter
+                    verticalAlignment: Image.AlignVCenter
+                    width: sizeHelper.width / 8 - 4
+                    height: sizeHelper.height / 9 - 4
+
+                    rotation: idx%2 == 0 ? 0 : 180
+
+                    transform: Translate {
+                        x: -width / 2
+                    }
+
+                    SequentialAnimation {
+                        id: trigDespawn
+
+                        NumberAnimation {
+                            target: triangleInstance
+                            property: "opacity"
+                            from: 0
+                            to: 1
+                            duration: 120
+                        }
+
+                        PauseAnimation { duration: 40 }
+
+                        ParallelAnimation {
+                            NumberAnimation {
+                                target: triangleInstance
+                                property: "width"
+                                to: sizeHelper.width / 8
+                                duration: 10
+                                running: false
+                            }
+
+                            NumberAnimation {
+                                target: triangleInstance
+                                property: "height"
+                                to: sizeHelper.height / 9
+                                duration: 10
+                                running: false
+                            }
+                        }
+                    }
+
+                    Timer {
+                        id: randomDelayTimer
+                        running: false
+                        repeat: false
+                        onTriggered: {
+                            trigDespawn.start()
+                        }
+                    }
+
+                    Connections {
+                        target: root
+                        onTrigDespawnTrigger: {
+                            randomDelayTimer.interval = Math.random() * 300
+                            randomDelayTimer.start()
+                        }
+                    }
+                }
+            }
+        }
+
         // Black screen overlay
         Rectangle {
             id: blackOverlay
@@ -76,86 +367,7 @@ Pane {
             layer.enabled: true
             layer.effect: OpacityMask {
                 invert: true
-                maskSource: Item {
-                    anchors.fill: parent
-                    width: sizeHelper.width
-                    height: sizeHelper.height
-
-                    Repeater {
-                        model: 17 * 9
-
-                        Image {
-                            id: triangleInstance
-                            opacity: 0
-                            property int idx: index
-
-                            x: (idx % 17) * (sizeHelper.width / 16)
-                            y: Math.floor(idx / 17) * (sizeHelper.height / 9)
-
-                            source: Qt.resolvedUrl("../Assets/triangle.png")
-                            horizontalAlignment: Image.AlignHCenter
-                            verticalAlignment: Image.AlignVCenter
-                            width: sizeHelper.width / 8 - 4
-                            height: sizeHelper.height / 9 - 4
-
-                            rotation: idx%2 == 0 ? 0 : 180
-
-                            transform: Translate {
-                                x: -width / 2
-                            }
-
-    
-                            SequentialAnimation {
-                                id: trigDespawn
-
-                                NumberAnimation {
-                                    target: triangleInstance
-                                    property: "opacity"
-                                    from: 0
-                                    to: 1
-                                    duration: 120
-                                }
-
-                                PauseAnimation { duration: 40 }
-
-                                ParallelAnimation {
-                                    NumberAnimation {
-                                        target: triangleInstance
-                                        property: "width"
-                                        to: sizeHelper.width / 8
-                                        duration: 10
-                                        running: false
-                                    }
-
-                                    NumberAnimation {
-                                        target: triangleInstance
-                                        property: "height"
-                                        to: sizeHelper.height / 9
-                                        duration: 10
-                                        running: false
-                                    }
-                                }
-                            }
-
-                            Timer {
-                                id: randomDelayTimer
-                                running: false
-                                repeat: false
-                                onTriggered: {
-                                    trigDespawn.start()
-                                }
-                            }
-
-                            Connections {
-                                target: root
-                                onTrigDespawnTrigger: {
-                                    randomDelayTimer.interval = Math.random() * 300
-                                    randomDelayTimer.start()
-                                }
-                            }
-                        }
-                    }
-                }
+                maskSource: mask
             }
         }
 
@@ -797,6 +1009,9 @@ Pane {
                     curtain.opacity = 0
                     break
                 case 1:
+                    mask.linesAnimationTrigger()
+                    break
+                case 3:
                     root.trigDespawnTrigger()
                     break
                 case 7:
