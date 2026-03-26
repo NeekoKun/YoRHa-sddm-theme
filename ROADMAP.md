@@ -33,6 +33,6 @@
 
 ## Integration
 - [ ] Test audio-visual synchronization
-- [ ] Cross-compatibility for different screen sizes
-    - [ ] Convert images into built-ins when possible for better scaling
+- [x] Cross-compatibility for different screen sizes
+    - [x] Convert images into built-ins when possible for better scaling
     - [x] Correct text upscaling
