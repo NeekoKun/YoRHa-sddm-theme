@@ -37,7 +37,16 @@ ColumnLayout {
         source: Qt.resolvedUrl("../fonts/Rodin-Pro-M.otf")
     }    
 
-    property alias animationTimer: formAnimationsTrigger
+    property alias avatarContainerFadeIn: avatarContainerFadeIn
+    property alias avatarContainerSlideIn: avatarContainerSlideIn
+    property alias infoBoardFadeIn: infoBoardFadeIn
+    property alias infoBoardSlideIn: infoBoardSlideIn
+    property alias headerTypewriter: headerTypewriterTimer
+    property alias avatarTypewriter: typewriterTimer
+    property alias header: header
+    property alias inputAnimation: input.inputAnimationsTrigger
+    //TODO: Footer typewriter effect
+
     property string fontFamily: rodinFont.name || "Arial"
     
     // Typewriter effect properties
@@ -61,6 +70,7 @@ ColumnLayout {
     // HEADER - Simple text with HeaderText aligned to the left
     Item {
         id: header
+        visible: false
         Layout.fillWidth: true
         Layout.preferredHeight: 60 //TODO: Relative scaling
 
@@ -357,16 +367,16 @@ ColumnLayout {
     }
 
     Timer {
-        id: sessionTypewriterTimer
+        id: headerTypewriterTimer
         interval: 20
         repeat: true
-        running: true
+        running: false
 
         onTriggered: {
             header.typewriterCharIndex++
              // Stop once reached a reasonable max length
             if (header.typewriterCharIndex > 2000) {
-                sessionTypewriterTimer.stop()
+                headerTypewriterTimer.stop()
             }
         }
     }

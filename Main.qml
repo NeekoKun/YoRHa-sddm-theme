@@ -43,36 +43,121 @@ Pane {
     font.pointSize: config.FontSize !== "" ? config.FontSize : parseInt(height / 80)
     focus: true
 
-    property bool leftleft: config.HaveFormBackground == "true" &&
-                            config.PartialBlur == "false" &&
-                            config.FormPosition == "left" &&
-                            config.BackgroundImageAlignment == "left"
-
-    property bool leftcenter: config.HaveFormBackground == "true" &&
-                              config.PartialBlur == "false" &&
-                              config.FormPosition == "left" &&
-                              config.BackgroundImageAlignment == "center"
-
-    property bool rightright: config.HaveFormBackground == "true" &&
-                              config.PartialBlur == "false" &&
-                              config.FormPosition == "right" &&
-                              config.BackgroundImageAlignment == "right"
-
-    property bool rightcenter: config.HaveFormBackground == "true" &&
-                               config.PartialBlur == "false" &&
-                               config.FormPosition == "right" &&
-                               config.BackgroundImageAlignment == "center"
-
     Rectangle {
         anchors.fill: parent
         color: "#000000"
     }
 
+    Rectangle {
+        id: curtain
+        anchors.fill: parent
+        color: "#000000"
+        z: 9999
+    }
+
+    signal trigDespawnTrigger()
+
     Item {
         id: sizeHelper
 
-        height: 1200
+        height: 1080
         width: 1920
+
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+
+        // Black screen overlay
+        Rectangle {
+            id: blackOverlay
+            anchors.fill: parent
+            color: "#000000"
+            z: 9998
+
+            layer.enabled: true
+            layer.effect: OpacityMask {
+                invert: true
+                maskSource: Item {
+                    anchors.fill: parent
+                    width: sizeHelper.width
+                    height: sizeHelper.height
+
+                    Repeater {
+                        model: 17 * 9
+
+                        Image {
+                            id: triangleInstance
+                            opacity: 0
+                            property int idx: index
+
+                            x: (idx % 17) * (sizeHelper.width / 16)
+                            y: Math.floor(idx / 17) * (sizeHelper.height / 9)
+
+                            source: Qt.resolvedUrl("../Assets/triangle.png")
+                            horizontalAlignment: Image.AlignHCenter
+                            verticalAlignment: Image.AlignVCenter
+                            width: sizeHelper.width / 8 - 4
+                            height: sizeHelper.height / 9 - 4
+
+                            rotation: idx%2 == 0 ? 0 : 180
+
+                            transform: Translate {
+                                x: -width / 2
+                            }
+
+    
+                            SequentialAnimation {
+                                id: trigDespawn
+
+                                NumberAnimation {
+                                    target: triangleInstance
+                                    property: "opacity"
+                                    from: 0
+                                    to: 1
+                                    duration: 120
+                                }
+
+                                PauseAnimation { duration: 40 }
+
+                                ParallelAnimation {
+                                    NumberAnimation {
+                                        target: triangleInstance
+                                        property: "width"
+                                        to: sizeHelper.width / 8
+                                        duration: 10
+                                        running: false
+                                    }
+
+                                    NumberAnimation {
+                                        target: triangleInstance
+                                        property: "height"
+                                        to: sizeHelper.height / 9
+                                        duration: 10
+                                        running: false
+                                    }
+                                }
+                            }
+
+                            Timer {
+                                id: randomDelayTimer
+                                running: false
+                                repeat: false
+                                onTriggered: {
+                                    trigDespawn.start()
+                                }
+                            }
+
+                            Connections {
+                                target: root
+                                onTrigDespawnTrigger: {
+                                    randomDelayTimer.interval = Math.random() * 300
+                                    randomDelayTimer.start()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         LoginForm {
             id: form
@@ -687,37 +772,60 @@ Pane {
             onClicked: parent.forceActiveFocus()
         }
 
-        //transform: Scale {
-        //    xScale: {
-        //        let scaleByWidth  = root.width  / sizeHelper.width
-        //        let scaleByHeight = root.height / sizeHelper.height
-        //        return Math.min(scaleByWidth, scaleByHeight)  // fit within screen
-        //    }
-        //    yScale: xScale
-        //}
+        transform: Scale {
+            xScale: {
+                let scaleByWidth  = root.width  / sizeHelper.width
+                let scaleByHeight = root.height / sizeHelper.height
+                return Math.min(scaleByWidth, scaleByHeight)  // fit within screen
+            }
+            yScale: xScale
+        }
     }
 
     // Timer to fire the various animations in order
     Timer {
+        id: animationDirector
         interval: 100
         running: true
-        repeat: false
+        repeat: true
+
+        property int step: 0
+
         onTriggered: {
-            horizontalTopBarSlideInAnimation.start()
-            horizontalBotBarSlideInAnimation.start()
-            firstTopCircleRotationAnim.start()
-            secondTopCircleRotationAnim.start()
-            firstBottomCircleRotationAnim.start()
-            secondBottomCircleRotationAnim.start()
+            switch (step) {
+                case 0:
+                    curtain.opacity = 0
+                    break
+                case 1:
+                    root.trigDespawnTrigger()
+                    break
+                case 7:
+                    horizontalTopBarSlideInAnimation.start()
+                    horizontalBotBarSlideInAnimation.start()
+                    firstTopCircleRotationAnim.start()
+                    secondTopCircleRotationAnim.start()
+                    firstBottomCircleRotationAnim.start()
+                    secondBottomCircleRotationAnim.start()
 
-            firstDiagonalBarWidthAnim.start()
-            secondDiagonalBarWidthAnim.start()
-            thirdDiagonalBarWidthAnim.start()
-            firstTopDiagonalBarWidthAnim.start()
-            secondTopDiagonalBarWidthAnim.start()
-            thirdTopDiagonalBarWidthAnim.start()
-
-            form.animationTimer.start()
+                    firstDiagonalBarWidthAnim.start()
+                    secondDiagonalBarWidthAnim.start()
+                    thirdDiagonalBarWidthAnim.start()
+                    firstTopDiagonalBarWidthAnim.start()
+                    secondTopDiagonalBarWidthAnim.start()
+                    thirdTopDiagonalBarWidthAnim.start()
+                    break
+                case 11:
+                    form.header.visible = true
+                    form.headerTypewriter.start()
+                    form.avatarContainerFadeIn.start()
+                    form.avatarContainerSlideIn.start()
+                    form.infoBoardFadeIn.start()
+                    form.infoBoardSlideIn.start()
+                    form.avatarTypewriter.start()
+                    form.inputAnimation.start()
+                    break
+            }
+            step++
         }
     }
 }
