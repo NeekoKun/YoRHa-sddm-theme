@@ -11,6 +11,35 @@
 - Sound effects play on focus, button press and login (WIP)
 - Scales to higher resolutions. If you have a 16:9 instead of a 16:10 monitor, change the height in the sizeHelper in [Main.qml](./Main.qml) from 1200 to 1080
 
+## Structure
+
+```
+YoRHa-sddm-theme/
+├── Components/
+│   ├── Main.qml
+│   ├── LoginForm.qml
+│   ├── SystemControl.qml
+│   ├── SystemInformations.qml
+│   ├── Footer.qml
+│   ├── Input.qml
+│   ├── SessionButton.qml
+│   └── SystemButtons
+├── Quotes/
+│   └── [quote files]
+├── Fonts/
+│   └── [fonts]
+├── Previews/
+│   ├── default.png
+│   └── de-select.png
+├── AUTHORS
+├── CHANGELOG.md
+├── CREDITS
+├── metadata.desktop
+├── TOFIX.md
+├── ROADMAP.md
+└── README.md
+```
+
 ## Installation
 1. Clone the repository in `/usr/share/sddm/themes`
     ```bash

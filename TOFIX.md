@@ -1,2 +1,3 @@
 - [x] Username placeholder is invisible
 - [x] On login fail, call openingAnimationDirector
+- [ ] Reimplement tab navigation

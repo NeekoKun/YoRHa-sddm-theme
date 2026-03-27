@@ -22,7 +22,7 @@ import QtQuick 2.11
 import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.4
 import QtGraphicalEffects 1.0
-import "Components"
+import "."
 
 Pane {
     id: root
@@ -327,7 +327,7 @@ Pane {
                     x: (idx % 17) * (sizeHelper.width / 16)
                     y: Math.floor(idx / 17) * (sizeHelper.height / 9)
 
-                    source: Qt.resolvedUrl("Assets/triangle.png")
+                    source: Qt.resolvedUrl("../Assets/triangle.png")
                     horizontalAlignment: Image.AlignHCenter
                     verticalAlignment: Image.AlignVCenter
                     width: sizeHelper.width / 8 - 2
@@ -485,7 +485,7 @@ Pane {
                 BorderImage {
                     Layout.fillWidth: true
                     Layout.fillHeight: false
-                    source: "Assets/horizontal_bar_left.png"
+                    source: "../Assets/horizontal_bar_left.png"
                     border.top: 0
                     border.bottom: 0
                     border.left: 0
@@ -495,7 +495,7 @@ Pane {
                 // Tiling body
                 Image {
                     id: horizontalBarTop
-                    source: "Assets/horizontal_bar_tile.png"
+                    source: "../Assets/horizontal_bar_tile.png"
                     Layout.preferredWidth: parent.tiled_width
                     fillMode: Image.TileHorizontally
                     horizontalAlignment: Image.AlignLeft
@@ -504,7 +504,7 @@ Pane {
                 BorderImage {
                     Layout.fillWidth: true
                     Layout.fillHeight: false
-                    source: "Assets/horizontal_bar_right.png"
+                    source: "../Assets/horizontal_bar_right.png"
                     border.top: 0
                     border.bottom: 0
                     border.left: 6
@@ -541,7 +541,7 @@ Pane {
                 BorderImage {
                     Layout.fillWidth: true
                     Layout.fillHeight: false
-                    source: "Assets/horizontal_bar_left.png"
+                    source: "../Assets/horizontal_bar_left.png"
                     border.top: 0
                     border.bottom: 0
                     border.left: 0
@@ -551,7 +551,7 @@ Pane {
                 // Tiling body
                 Image {
                     id: horizontalBarBottom
-                    source: "Assets/horizontal_bar_tile.png"
+                    source: "../Assets/horizontal_bar_tile.png"
                     Layout.preferredWidth: parent.tiled_width
                     fillMode: Image.TileHorizontally
                     horizontalAlignment: Image.AlignLeft
@@ -560,7 +560,7 @@ Pane {
                 BorderImage {
                     Layout.fillWidth: true
                     Layout.fillHeight: false
-                    source: "Assets/horizontal_bar_right.png"
+                    source: "../Assets/horizontal_bar_right.png"
                     border.top: 0
                     border.bottom: 0
                     border.left: 6
@@ -753,7 +753,7 @@ Pane {
             anchors.verticalCenter: parent.bottom
             width: 1194
             height: 1194
-            source: "Assets/semicircle.png" // Fake fuckass circle
+            source: "../Assets/semicircle.png" // Fake fuckass circle
             opacity: 0.13
             rotation: 180
 
@@ -771,7 +771,7 @@ Pane {
             anchors.verticalCenter: parent.bottom
             width: 1224
             height: 1224
-            source: "Assets/semicircle.png"
+            source: "../Assets/semicircle.png"
             opacity: 0.13
             rotation: 180
 
@@ -960,7 +960,7 @@ Pane {
             anchors.verticalCenter: parent.top
             width: 1194
             height: 1194
-            source: "Assets/semicircle.png" // Fake fuckass circle
+            source: "../Assets/semicircle.png" // Fake fuckass circle
             opacity: 0.13
             rotation: 0
 
@@ -978,7 +978,7 @@ Pane {
             anchors.verticalCenter: parent.top
             width: 1224
             height: 1224
-            source: "Assets/semicircle.png"
+            source: "../Assets/semicircle.png"
             opacity: 0.13
             rotation: 0
 
@@ -994,7 +994,7 @@ Pane {
         Image {
             id: gridTileOverlay
             anchors.fill: parent
-            source: "Assets/grid_tile.png"
+            source: "../Assets/grid_tile.png"
             fillMode: Image.Tile
             asynchronous: true
             cache: true
