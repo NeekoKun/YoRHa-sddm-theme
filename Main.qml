@@ -56,6 +56,7 @@ Pane {
     }
 
     signal trigDespawnTrigger()
+    signal trigRespawnTrigger()
 
     Item {
         id: sizeHelper
@@ -74,7 +75,8 @@ Pane {
             height: sizeHelper.height
             z: -1
 
-            signal linesAnimationTrigger()
+            signal linesDespawnAnimationTrigger()
+            signal linesRespawnAnimationTrigger()
 
             // TOP HORIZONTAL BAR
             Rectangle {
@@ -95,8 +97,12 @@ Pane {
 
                 Connections {
                     target: mask
-                    onLinesAnimationTrigger: {
+                    function onLinesDespawnAnimationTrigger() {
                         topHorizontalLine.width = sizeHelper.width
+                    }
+
+                    function onLinesRespawnAnimationTrigger() {
+                        topHorizontalLine.width = 0
                     }
                 }
             }
@@ -120,8 +126,12 @@ Pane {
 
                 Connections {
                     target: mask
-                    onLinesAnimationTrigger: {
+                    function onLinesDespawnAnimationTrigger() {
                         bottomHorizontalLine.width = sizeHelper.width
+                    }
+
+                    function onLinesRespawnAnimationTrigger() {
+                        bottomHorizontalLine.width = 0
                     }
                 }
             }
@@ -146,8 +156,12 @@ Pane {
 
                 Connections {
                     target: mask
-                    onLinesAnimationTrigger: {
+                    function onLinesDespawnAnimationTrigger() {
                         topLeftDiagonal1.width = 1528 // sqrt(2 * 1080^2)
+                    }
+
+                    function onLinesRespawnAnimationTrigger() {
+                        topLeftDiagonal1.width = 0
                     }
                 }
             }
@@ -172,8 +186,12 @@ Pane {
 
                 Connections {
                     target: mask
-                    onLinesAnimationTrigger: {
+                    function onLinesDespawnAnimationTrigger() {
                         topLeftDiagonal2.width = 1528 // sqrt(2 * 1080^2)
+                    }
+
+                    function onLinesRespawnAnimationTrigger() {
+                        topLeftDiagonal2.width = 0
                     }
                 }
             }
@@ -198,8 +216,12 @@ Pane {
 
                 Connections {
                     target: mask
-                    onLinesAnimationTrigger: {
+                    function onLinesDespawnAnimationTrigger() {
                         topRightDiagonal1.width = 1528 // sqrt(2 * 1080^2)
+                    }
+
+                    function onLinesRespawnAnimationTrigger() {
+                        topRightDiagonal1.width = 0
                     }
                 }
             }
@@ -224,8 +246,12 @@ Pane {
 
                 Connections {
                     target: mask
-                    onLinesAnimationTrigger: {
+                    function onLinesDespawnAnimationTrigger() {
                         topRightDiagonal2.width = 1528 // sqrt(2 * 1080^2)
+                    }
+
+                    function onLinesRespawnAnimationTrigger() {
+                        topRightDiagonal2.width = 0
                     }
                 }
             }
@@ -250,8 +276,12 @@ Pane {
 
                 Connections {
                     target: mask
-                    onLinesAnimationTrigger: {
+                    function onLinesDespawnAnimationTrigger() {
                         bottomLeftDiagonal.width = 1528 // sqrt(2 * 1080^2)
+                    }
+
+                    function onLinesRespawnAnimationTrigger() {
+                        bottomLeftDiagonal.width = 0
                     }
                 }
             }
@@ -276,8 +306,12 @@ Pane {
 
                 Connections {
                     target: mask
-                    onLinesAnimationTrigger: {
+                    function onLinesDespawnAnimationTrigger() {
                         bottomRightDiagonal.width = 1528 // sqrt(2 * 1080^2)
+                    }
+
+                    function onLinesRespawnAnimationTrigger() {
+                        bottomRightDiagonal.width = 0
                     }
                 }
             }
@@ -293,16 +327,25 @@ Pane {
                     x: (idx % 17) * (sizeHelper.width / 16)
                     y: Math.floor(idx / 17) * (sizeHelper.height / 9)
 
-                    source: Qt.resolvedUrl("../Assets/triangle.png")
+                    source: Qt.resolvedUrl("Assets/triangle.png")
                     horizontalAlignment: Image.AlignHCenter
                     verticalAlignment: Image.AlignVCenter
-                    width: sizeHelper.width / 8 - 4
-                    height: sizeHelper.height / 9 - 4
+                    width: sizeHelper.width / 8 - 2
+                    height: sizeHelper.height / 9 - 2
 
                     rotation: idx%2 == 0 ? 0 : 180
 
                     transform: Translate {
                         x: -width / 2
+                    }
+
+                    NumberAnimation {
+                        id: trigRespawn
+                        target: triangleInstance
+                        property: "opacity"
+                        from: 1
+                        to: 0
+                        duration: 120
                     }
 
                     SequentialAnimation {
@@ -338,19 +381,37 @@ Pane {
                     }
 
                     Timer {
-                        id: randomDelayTimer
+                        id: randomDespawnDelayTimer
                         running: false
                         repeat: false
                         onTriggered: {
+                            if (Math.random() < 0.5) {
+                                triangleInstance.width = sizeHelper.width / 8
+                                triangleInstance.height = sizeHelper.height / 9
+                            }
                             trigDespawn.start()
+                        }
+                    }
+
+                    Timer {
+                        id: randomRespawnDelayTimer
+                        running: false
+                        repeat: false
+                        onTriggered: {
+                            trigRespawn.start()
                         }
                     }
 
                     Connections {
                         target: root
-                        onTrigDespawnTrigger: {
-                            randomDelayTimer.interval = Math.random() * 300
-                            randomDelayTimer.start()
+                        function onTrigDespawnTrigger() {
+                            randomDespawnDelayTimer.interval = Math.random() * 300
+                            randomDespawnDelayTimer.start()
+                        }
+
+                        function onTrigRespawnTrigger() {
+                            randomRespawnDelayTimer.interval = Math.random() * 300
+                            randomRespawnDelayTimer.start()
                         }
                     }
                 }
@@ -996,7 +1057,7 @@ Pane {
 
     // Timer to fire the various animations in order
     Timer {
-        id: animationDirector
+        id: openingAnimationDirector
         interval: 100
         running: true
         repeat: true
@@ -1009,12 +1070,14 @@ Pane {
                     curtain.opacity = 0
                     break
                 case 1:
-                    mask.linesAnimationTrigger()
+                    mask.linesDespawnAnimationTrigger()
                     break
                 case 3:
                     root.trigDespawnTrigger()
                     break
-                case 7:
+                case 7: // BACKGROUND ANIMATIONS
+                    blackOverlay.opacity = 0
+                    mask.linesRespawnAnimationTrigger()
                     horizontalTopBarSlideInAnimation.start()
                     horizontalBotBarSlideInAnimation.start()
                     firstTopCircleRotationAnim.start()
@@ -1029,15 +1092,22 @@ Pane {
                     secondTopDiagonalBarWidthAnim.start()
                     thirdTopDiagonalBarWidthAnim.start()
                     break
-                case 11:
-                    form.header.visible = true
-                    form.headerTypewriter.start()
-                    form.avatarContainerFadeIn.start()
-                    form.avatarContainerSlideIn.start()
-                    form.infoBoardFadeIn.start()
-                    form.infoBoardSlideIn.start()
-                    form.avatarTypewriter.start()
-                    form.inputAnimation.start()
+                case 11: // UI SPAWN
+                    form.header.spawn()
+                    form.avatarContainer.spawn()
+                    form.input.spawn()
+                    form.infoBoard.spawn()
+                    break
+                case 44:
+                    form.header.despawn()
+                    form.avatarContainer.despawn()
+                    form.input.despawn()
+                    form.infoBoard.despawn()
+                    break
+                case 65: // Fake login, to implement
+                    blackOverlay.opacity = 1
+                    root.trigRespawnTrigger()
+                    openingAnimationDirector.stop()
                     break
             }
             step++

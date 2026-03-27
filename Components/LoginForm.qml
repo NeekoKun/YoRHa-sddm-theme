@@ -37,21 +37,13 @@ ColumnLayout {
         source: Qt.resolvedUrl("../fonts/Rodin-Pro-M.otf")
     }    
 
-    property alias avatarContainerFadeIn: avatarContainerFadeIn
-    property alias avatarContainerSlideIn: avatarContainerSlideIn
-    property alias infoBoardFadeIn: infoBoardFadeIn
-    property alias infoBoardSlideIn: infoBoardSlideIn
-    property alias headerTypewriter: headerTypewriterTimer
-    property alias avatarTypewriter: typewriterTimer
     property alias header: header
-    property alias inputAnimation: input.inputAnimationsTrigger
+    property alias input: input
+    property alias avatarContainer: avatarContainer
+    property alias infoBoard: infoBoard
     //TODO: Footer typewriter effect
 
     property string fontFamily: rodinFont.name || "Arial"
-    
-    // Typewriter effect properties
-    property int typewriterCharIndex: 0
-    property string randomChar: ""
 
     function getTypewriterText(fullText, charCount) {
         var chars = "abcdefghijklmnopqrstuvwxyz";
@@ -70,10 +62,20 @@ ColumnLayout {
     // HEADER - Simple text with HeaderText aligned to the left
     Item {
         id: header
-        visible: false
+        opacity: 0
         Layout.fillWidth: true
         Layout.preferredHeight: 60 //TODO: Relative scaling
 
+        function spawn() {
+            header.opacity = 1
+            headerTypewriterForwardTimer.start()
+        }
+
+        function despawn() {
+            headerTypewriterBackwardTimer.start()
+        }
+
+        property var text: "START SESSION"
         property var typewriterCharIndex: 0
 
         Text {
@@ -82,7 +84,7 @@ ColumnLayout {
             anchors.leftMargin: 5
             anchors.verticalCenter: parent.verticalCenter
             anchors.verticalCenterOffset: 5
-            text: formContainer.getTypewriterText("START SESSION", header.typewriterCharIndex)
+            text: formContainer.getTypewriterText(header.text, header.typewriterCharIndex)
             font.family: formContainer.fontFamily
             font.pointSize: sizeHelper.height / 27
             color: "#000000"
@@ -100,6 +102,35 @@ ColumnLayout {
             color: "#34332B"
             opacity: 0.8
             z: 1
+        }
+
+        Timer {
+            id: headerTypewriterForwardTimer
+            interval: 20
+            repeat: true
+            running: false
+            onTriggered: {
+                header.typewriterCharIndex++
+                // Stop once reached a reasonable max length
+                if (header.typewriterCharIndex > header.text.length) {
+                    headerTypewriterForwardTimer.stop()
+                }
+            }
+        }
+
+        Timer {
+            id: headerTypewriterBackwardTimer
+            interval: 20
+            repeat: true
+            running: false
+            onTriggered: {
+                header.typewriterCharIndex--
+                // Stop once reached 0
+                if (header.typewriterCharIndex < 0) {
+                    headerTypewriterBackwardTimer.stop()
+                    header.opacity = 0
+                }
+            }
         }
     }
 
@@ -125,6 +156,19 @@ ColumnLayout {
             width: 440 //TODO: Relative scaling
             height: 540 //TODO: Relative scaling
 
+            property var typewriterCharIndex: 0
+
+            function spawn() {
+                avatarContainerFadeIn.start()
+                avatarContainerSlideIn.start()
+                avatarTypewriterForward.start()
+            }
+
+            function despawn() {
+                avatarTypewriterForward.stop()
+                avatarTypewriterBackward.start()
+            }
+
             Rectangle {
                 id: avatarBackground
                 anchors.fill: parent
@@ -143,14 +187,15 @@ ColumnLayout {
 
             ColumnLayout {
                 anchors.fill: parent
+                spacing: 20
 
                 Item {
                     id: logoHeader
-                    anchors.top: parent.top
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.left: parent.left
-                    anchors.right: parent.right
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
                     height: 47 //TODO: Relative scaling
+
+                    property string text: "YoRHa"
 
                     Rectangle {
                         anchors.fill: parent
@@ -159,10 +204,11 @@ ColumnLayout {
                     }
 
                     Text {
+                        id: logoHeaderText
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.leftMargin: 30 //TODO: Relative scaling
-                        text: formContainer.getTypewriterText("YoRHa", formContainer.typewriterCharIndex)
+                        text: formContainer.getTypewriterText(logoHeader.text, avatarContainer.typewriterCharIndex)
                         font.family: formContainer.fontFamily
                         font.pointSize: sizeHelper.height / 67
                         color: "#D5CFAF"
@@ -172,12 +218,11 @@ ColumnLayout {
 
                 Item {
                     id: logoContent
-                    anchors.margins: 30 //TODO: Relative scaling
-                    anchors.topMargin: 20 //TODO: Relative scaling
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.top: logoHeader.bottom
-                    height: 200 //TODO: Relative scaling
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
+                    Layout.leftMargin: 30 //TODO: Relative scaling
+                    Layout.rightMargin: 30 //TODO: Relative scaling
+                    Layout.preferredHeight: 200 //TODO: Relative scaling
 
                     Rectangle {
                         anchors.fill: parent
@@ -197,41 +242,44 @@ ColumnLayout {
 
                 Item {
                     id: logoCaption
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.top: logoContent.bottom
-                    anchors.margins: 30 //TODO: Relative scaling
-                    height: 47 //TODO: Relative scaling
+                    Layout.alignment: Qt.AlignLeft | Qt.AlignRight | Qt.AlignTop
+                    Layout.leftMargin: 30 //TODO: Relative scaling
+                    Layout.rightMargin: 30 //TODO: Relative scaling
+                    Layout.preferredHeight: 47 //TODO: Relative scaling
+
+                    property string text: "For the Glory of Mankind"
 
                     Text {
                         font.pointSize: sizeHelper.height / 67
                         font.family: formContainer.fontFamily
                         color: "#34332B"
-                        text: formContainer.getTypewriterText("For the Glory of Mankind", formContainer.typewriterCharIndex)
+                        text: formContainer.getTypewriterText(logoCaption.text, avatarContainer.typewriterCharIndex)
                         opacity: 0.8
                     }
                 }
 
                 Rectangle {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.top: logoCaption.bottom
-                    anchors.leftMargin: 30 //TODO: Relative scaling
-                    anchors.rightMargin: 30 //TODO: Relative scaling
-                    height: 2 //TODO: Relative scaling
+                    id: separator
+                    Layout.alignment: Qt.AlignLeft | Qt.AlignRight
+                    Layout.fillWidth: true
+                    Layout.leftMargin: 30 //TODO: Relative scaling
+                    Layout.rightMargin: 30 //TODO: Relative scaling
+                    Layout.topMargin: -37 //TODO: Relative scaling
+                    Layout.preferredHeight: 2 //TODO: Relative scaling
                     color: "#AFA98F"
                     opacity: 1
                 }
 
                 Item {
                     id: logoQuote
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.top: logoCaption.bottom
-                    anchors.bottom: parent.bottom
-                    anchors.margins: 30 //TODO: Relative scaling
+                    Layout.alignment: Qt.AlignLeft | Qt.AlignRight | Qt.AlignTop
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    Layout.leftMargin: 30 //TODO: Relative scaling
+                    Layout.rightMargin: 30 //TODO: Relative scaling
+                    Layout.bottomMargin: 30 //TODO: Relative scaling
 
-                    property string quoteText: {
+                    property string line: {
                         var fileUrl = Qt.resolvedUrl("../Quotes/nier.txt"); // Edit this to change the quote file
                         var quoteText = "";
                         var xhr = new XMLHttpRequest();
@@ -250,6 +298,34 @@ ColumnLayout {
                         return "";
                     }
 
+                    property string quoteText: {
+                        var lines = logoQuote.line.split(/\r?\n/).filter(function(line) { return line.trim().length > 0; });
+                        if (lines.length > 0) {
+                            var idx = Math.floor(Math.random() * lines.length);
+                            var line = lines[idx];
+                            var tildeIdx = line.indexOf("~");
+                            var fullText = "";
+                            if (tildeIdx !== -1)
+                                fullText = line.substring(0, tildeIdx).trim();
+                            else
+                                fullText = line.trim();
+                            return fullText;
+                        }
+                        return "";
+                    }
+
+                    property string quoteAuthor: {
+                        var lines = logoQuote.line.split(/\r?\n/).filter(function(line) { return line.trim().length > 0; });
+                        if (lines.length > 0) {
+                            var idx = Math.floor(Math.random() * lines.length);
+                            var line = lines[idx];
+                            var tildeIdx = line.indexOf("~");
+                            if (tildeIdx !== -1)
+                                return line.substring(tildeIdx + 1).trim();
+                        }
+                        return "";
+                    }
+
                     Text {
                         anchors.left: parent.left
                         anchors.right: parent.right
@@ -259,21 +335,7 @@ ColumnLayout {
                         color: "#34332B"
                         opacity: 0.8
                         wrapMode: Text.WordWrap
-                        text: {
-                            var lines = logoQuote.quoteText.split(/\r?\n/).filter(function(line) { return line.trim().length > 0; });
-                            if (lines.length > 0) {
-                                var idx = Math.floor(Math.random() * lines.length);
-                                var line = lines[idx];
-                                var tildeIdx = line.indexOf("~");
-                                var fullText = "";
-                                if (tildeIdx !== -1)
-                                    fullText = line.substring(0, tildeIdx).trim();
-                                else
-                                    fullText = line.trim();
-                                return formContainer.getTypewriterText(fullText, formContainer.typewriterCharIndex);
-                            }
-                            return "";
-                        }
+                        text: formContainer.getTypewriterText(logoQuote.quoteText, avatarContainer.typewriterCharIndex)
                     }
 
                     Text {
@@ -283,19 +345,7 @@ ColumnLayout {
                         font.family: formContainer.fontFamily
                         color: "#34332B"
                         opacity: 0.8
-                        text: {
-                            var lines = logoQuote.quoteText.split(/\r?\n/).filter(function(line) { return line.trim().length > 0; });
-                            if (lines.length > 0) {
-                                var idx = Math.floor(Math.random() * lines.length);
-                                var line = lines[idx];
-                                var tildeIdx = line.indexOf("~");
-                                var fullText = "";
-                                if (tildeIdx !== -1)
-                                    fullText = line.substring(tildeIdx + 1).trim();
-                                return formContainer.getTypewriterText(fullText, formContainer.typewriterCharIndex);
-                            }
-                            return "";
-                        }
+                        text: formContainer.getTypewriterText(logoQuote.quoteAuthor, avatarContainer.typewriterCharIndex)
                     }
                 }
             }
@@ -319,6 +369,59 @@ ColumnLayout {
                 duration: 600
                 easing.type: Easing.OutCubic
             }
+
+            NumberAnimation {
+                id: avatarContainerFadeOut
+                target: avatarContainer
+                property: "opacity"
+                from: 1
+                to: 0
+                duration: 600
+                easing.type: Easing.OutCubic
+            }
+
+            NumberAnimation {
+                id: avatarContainerSlideOut
+                target: avatarContainer.anchors
+                property: "rightMargin"
+                from: 0
+                to: -60 //TODO: Relative scaling
+                duration: 600
+                easing.type: Easing.OutCubic
+            }
+
+            NumberAnimation {
+                id: avatarTypewriterForward
+                target: avatarContainer
+                property: "typewriterCharIndex"
+                from: 0
+                to: Math.max(logoHeader.text.length, logoCaption.text.length, logoQuote.quoteText.length)
+                duration: 300
+                easing.type: Easing.Linear
+            }
+
+            NumberAnimation {
+                id: avatarTypewriterBackward
+                target: avatarContainer
+                property: "typewriterCharIndex"
+                from: Math.max(logoHeader.text.length, logoCaption.text.length, logoQuote.quoteText.length)
+                to: 0
+                duration: 300
+                easing.type: Easing.Linear
+            }
+
+
+            Connections {
+                target: avatarTypewriterBackward
+
+                function onStopped() {
+                    logoHeaderText.opacity = 0
+                    logoCaption.opacity = 0
+                    logoQuote.opacity = 0
+                    avatarContainerFadeOut.start()
+                    avatarContainerSlideOut.start()
+                }
+            }
         }
     }
 
@@ -328,6 +431,19 @@ ColumnLayout {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0 // Gets modified by animation
         opacity: 0 // Gets modified by animation
+
+        function spawn() {
+            infoBoardFadeIn.start()
+            infoBoardSlideIn.start()
+            infoBoard.typewriterForward.start()
+        }
+
+        function despawn() {
+            infoBoard.typewriterForward.stop()
+            infoBoard.typewriterBackward.start()
+            infoBoardFadeOut.start()
+            infoBoardSlideOut.start()
+        }
     }
 
     NumberAnimation {
@@ -350,49 +466,33 @@ ColumnLayout {
         easing.type: Easing.OutCubic
     }
 
-    Timer {
-        id: formAnimationsTrigger
-        running: false
-        interval: 600
-        repeat: false
-        
-        onTriggered: {
-            avatarContainerFadeIn.start()
-            avatarContainerSlideIn.start()
-            infoBoardFadeIn.start()
-            infoBoardSlideIn.start()
-            input.inputAnimationsTrigger.start()
-            typewriterTimer.start()
+    SequentialAnimation {
+        id: infoBoardFadeOut
+
+        PauseAnimation { duration: 400 }
+
+        NumberAnimation {
+            target: infoBoard
+            property: "opacity"
+            from: 1
+            to: 0
+            duration: 600
+            easing.type: Easing.OutCubic
         }
     }
 
-    Timer {
-        id: headerTypewriterTimer
-        interval: 20
-        repeat: true
-        running: false
+    SequentialAnimation {
+        id: infoBoardSlideOut
 
-        onTriggered: {
-            header.typewriterCharIndex++
-             // Stop once reached a reasonable max length
-            if (header.typewriterCharIndex > 2000) {
-                headerTypewriterTimer.stop()
-            }
-        }
-    }
+        PauseAnimation { duration: 400 }
 
-    Timer {
-        id: typewriterTimer
-        interval: 20
-        repeat: true
-        running: false
-        
-        onTriggered: {
-            formContainer.typewriterCharIndex++
-            // Stop once reached a reasonable max length
-            if (formContainer.typewriterCharIndex > 20000) {
-                typewriterTimer.stop()
-            }
+        NumberAnimation {
+            target: infoBoard.anchors
+            property: "bottomMargin"
+            from: 110 //TODO: Relative scaling
+            to: -60 //TODO: Relative scaling
+            duration: 600
+            easing.type: Easing.OutCubic
         }
     }
 }

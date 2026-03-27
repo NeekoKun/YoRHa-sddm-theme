@@ -48,10 +48,17 @@ Column {
     }
 
     property Control exposeLogin: loginButton
-    property alias inputAnimationsTrigger: inputAnimationsTrigger
     property bool failed
     property string fontFamily: "Arial"
     property var formFunctions: parent.parent
+
+    function spawn() {
+        spawnAnimationSequence.start()
+    }
+
+    function despawn() {
+        despawnAnimationSequence.start()
+    }
 
     // Disable Tab navigation
     Keys.onPressed: {
@@ -64,7 +71,7 @@ Column {
     Item {
         id: usernameField
 
-        property int usernameCharIndex: 0
+        property int typewriterCharIndex: 0
 
         height: 75
         width: 500 //TODO: Relative scaling
@@ -163,7 +170,7 @@ Column {
             anchors.leftMargin: 55 //TODO: Relative scaling
             height: 48 //TODO: Relative scaling
             width: 389 //TODO: Relative scaling 
-            placeholderText: ""
+            placeholderText: "Username"
             selectByMouse: true
             horizontalAlignment: TextInput.AlignLeft
             renderType: Text.QtRendering
@@ -211,6 +218,7 @@ Column {
                     color: "#45000000"
                 }
             }
+
             Keys.onReturnPressed: loginButton.clicked()
             KeyNavigation.down: password
             Keys.onDownPressed: {
@@ -1005,7 +1013,9 @@ Column {
 
     Connections {
         target: sddm
-        onLoginSucceeded: {} //TODO: Play sound on login success
+        onLoginSucceeded: {
+
+        } //TODO: Play sound on login success
         onLoginFailed: { //TODO: Play sound on login failure
             failed = true
             resetError.running ? resetError.stop() && resetError.start() : resetError.start()
@@ -1013,7 +1023,7 @@ Column {
     }
 
     ParallelAnimation {
-        id: animationSequence
+        id: spawnAnimationSequence
 
         // USERNAME ANIMATIONS
         SequentialAnimation {
@@ -1223,14 +1233,191 @@ Column {
         }
     }
 
-    Timer {
-        id: inputAnimationsTrigger
-        interval: 100
-        running: false
-        repeat: false
+    ParallelAnimation {
+        id: despawnAnimationSequence
 
-        onTriggered: {
-            animationSequence.start()
+        // USERNAME ANIMATIONS
+        SequentialAnimation {
+            PauseAnimation { duration: 300 }
+            ParallelAnimation {
+                NumberAnimation {
+                    target: usernameSquare
+                    property: "opacity"
+                    from: 0.8
+                    to: 0
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: usernameSquare.anchors
+                    property: "leftMargin"
+                    from: 67 //TODO: Relative scaling
+                    to: 7 //TODO: Relative scaling
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: username
+                    property: "opacity"
+                    from: 1
+                    to: 0
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: username.anchors
+                    property: "leftMargin"
+                    from: 55 //TODO: Relative scaling
+                    to: -5 //TODO: Relative scaling
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: usernameVerticalBar
+                    property: "opacity"
+                    from: 0.13
+                    to: 0
+                    duration: 200
+                }
+            }
+        }
+
+        // PASSWORD ANIMATIONS
+        SequentialAnimation {
+            PauseAnimation { duration: 200 }
+            
+            ParallelAnimation {
+                NumberAnimation {
+                    target: passwordSquare
+                    property: "opacity"
+                    from: 0.8
+                    to: 0
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: passwordSquare.anchors
+                    property: "leftMargin"
+                    from: 67 //TODO: Relative scaling
+                    to: 7 //TODO: Relative scaling
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: password
+                    property: "opacity"
+                    from: 1
+                    to: 0
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: password.anchors
+                    property: "leftMargin"
+                    from: 55 //TODO: Relative scaling
+                    to: -5 //TODO: Relative scaling
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: passwordVerticalBar
+                    property: "opacity"
+                    from: 0.13
+                    to: 0
+                    duration: 200
+                }
+            }
+        }
+
+        // SESSION SELECT ANIMATIONS
+        SequentialAnimation {
+            PauseAnimation { duration: 100 }
+            ParallelAnimation {
+                NumberAnimation {
+                    target: sessionSquare
+                    property: "opacity"
+                    from: 0.8
+                    to: 0
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: sessionSquare.anchors
+                    property: "leftMargin"
+                    from: 67 //TODO: Relative scaling
+                    to: 7 //TODO: Relative scaling
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: sessionSelect
+                    property: "opacity"
+                    from: 1
+                    to: 0
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: sessionSelect.anchors
+                    property: "leftMargin"
+                    from: 55 //TODO: Relative scaling
+                    to: -5 //TODO: Relative scaling
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: sessionVerticalBar
+                    property: "opacity"
+                    from: 0.13
+                    to: 0
+                    duration: 200
+                }
+            }
+        }
+
+        // LOGIN BUTTON ANIMATIONS
+        SequentialAnimation {
+            ParallelAnimation {
+                NumberAnimation {
+                    target: loginSquare
+                    property: "opacity"
+                    from: login.opacityMultiplier
+                    to: 0
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: loginSquare.anchors
+                    property: "leftMargin"
+                    from: 67 //TODO: Relative scaling
+                    to: 7 //TODO: Relative scaling
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: loginButton
+                    property: "opacity"
+                    from: 1
+                    to: 0
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: loginButton.anchors
+                    property: "leftMargin"
+                    from: 55 //TODO: Relative scaling
+                    to: -5 //TODO: Relative scaling
+                    duration: 200
+                }
+
+                NumberAnimation {
+                    target: loginVerticalBar
+                    property: "opacity"
+                    from: 0.13
+                    to: 0
+                    duration: 200
+                }
+            }
         }
     }
 
@@ -1241,13 +1428,13 @@ Column {
         repeat: true
 
         onTriggered: {
-            usernameField.usernameCharIndex++
+            usernameField.typewriterCharIndex++
             // Update the placeholder text directly
             var placeholder = config.TranslateUsernamePlaceholder || textConstants.userName;
             username.placeholderText = inputContainer.formFunctions.getTypewriterText(placeholder, usernameField.usernameCharIndex);
             
             // Stop once reached a reasonable max length
-            if (usernameField.usernameCharIndex > 2000) {
+            if (usernameField.typewriterCharIndex > 2000) {
                 usernameTypewriterTimer.stop()
             }
         }
