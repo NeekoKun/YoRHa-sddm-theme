@@ -512,14 +512,11 @@ Pane {
                 }
             }
 
-            NumberAnimation {
-                id: horizontalTopBarSlideInAnimation
-                target: horizontalTopBarContainer
-                property: "width"
-                from: 0
-                to: parent.width
-                duration: 600
-                easing.type: Easing.OutCubic
+            Behavior on width {
+                NumberAnimation {
+                    duration: 600
+                    easing.type: Easing.OutCubic
+                }
             }
         }
 
@@ -571,14 +568,11 @@ Pane {
                 }
             }
 
-            NumberAnimation {
-                id: horizontalBotBarSlideInAnimation
-                target: horizontalBotBarContainer
-                property: "width"
-                from: 0
-                to: parent.width
-                duration: 600
-                easing.type: Easing.OutCubic
+            Behavior on width {
+                NumberAnimation {
+                    duration: 600
+                    easing.type: Easing.OutCubic
+                }
             }
         }
 
@@ -596,14 +590,11 @@ Pane {
             rotation: 45
             opacity: 0.13
 
-            NumberAnimation {
-                id: firstDiagonalBarWidthAnim
-                target: firstDiagonalBar
-                property: "width"
-                from: 0
-                to: 3000
-                duration: 800
-                easing.type: Easing.Linear
+            Behavior on width {
+                NumberAnimation {
+                    duration: 800
+                    easing.type: Easing.Linear
+                }
             }
 
             PropertyAnimation {
@@ -655,14 +646,11 @@ Pane {
             rotation: 45
             opacity: 0.13
 
-            NumberAnimation {
-                id: secondDiagonalBarWidthAnim
-                target: secondDiagonalBar
-                property: "width"
-                from: 0
-                to: 3000
-                duration: 800
-                easing.type: Easing.OutCubic
+            Behavior on width {
+                NumberAnimation {
+                    duration: 800
+                    easing.type: Easing.Linear
+                }
             }
 
             PropertyAnimation {
@@ -714,14 +702,11 @@ Pane {
             rotation: 45
             opacity: 0.13
 
-            NumberAnimation {
-                id: thirdDiagonalBarWidthAnim
-                target: thirdDiagonalBar
-                property: "width"
-                from: 0
-                to: 3000
-                duration: 800
-                easing.type: Easing.Linear
+            Behavior on width {
+                NumberAnimation {
+                    duration: 800
+                    easing.type: Easing.Linear
+                }
             }
 
             PropertyAnimation {
@@ -772,14 +757,11 @@ Pane {
             opacity: 0.13
             rotation: 180
 
-            NumberAnimation {
-                id: firstBottomCircleRotationAnim
-                target: firstBottomCircle
-                property: "rotation"
-                from: 180
-                to: 270
-                duration: 1000
-                easing.type: Easing.Linear
+            Behavior on rotation {
+                NumberAnimation {
+                    duration: 1000
+                    easing.type: Easing.Linear
+                }
             }
         }
 
@@ -793,14 +775,11 @@ Pane {
             opacity: 0.13
             rotation: 180
 
-            NumberAnimation {
-                id: secondBottomCircleRotationAnim
-                target: secondBottomCircle
-                property: "rotation"
-                from: 180
-                to: 280
-                duration: 1000
-                easing.type: Easing.Linear
+            Behavior on rotation {
+                NumberAnimation {
+                    duration: 1000
+                    easing.type: Easing.Linear
+                }
             }
         }
 
@@ -818,14 +797,11 @@ Pane {
             rotation: 45
             opacity: 0.13
 
-            NumberAnimation {
-                id: firstTopDiagonalBarWidthAnim
-                target: firstTopDiagonalBar
-                property: "width"
-                from: 0
-                to: 3000
-                duration: 800
-                easing.type: Easing.Linear
+            Behavior on width {
+                NumberAnimation {
+                    duration: 800
+                    easing.type: Easing.Linear
+                }
             }
 
             PropertyAnimation {
@@ -877,14 +853,11 @@ Pane {
             height: 4
             rotation: 45
 
-            NumberAnimation {
-                id: secondTopDiagonalBarWidthAnim
-                target: secondTopDiagonalBar
-                property: "width"
-                from: 0
-                to: 3000
-                duration: 800
-                easing.type: Easing.Linear
+            Behavior on width {
+                NumberAnimation {
+                    duration: 800
+                    easing.type: Easing.Linear
+                }
             }
 
             PropertyAnimation {
@@ -936,14 +909,11 @@ Pane {
             width: 0
             rotation: 45
 
-            NumberAnimation {
-                id: thirdTopDiagonalBarWidthAnim
-                target: thirdTopDiagonalBar
-                property: "width"
-                from: 0
-                to: 3000
-                duration: 800
-                easing.type: Easing.Linear
+            Behavior on width {
+                NumberAnimation {
+                    duration: 800
+                    easing.type: Easing.Linear
+                }
             }
 
             PropertyAnimation {
@@ -994,14 +964,11 @@ Pane {
             opacity: 0.13
             rotation: 0
 
-            NumberAnimation {
-                id: firstTopCircleRotationAnim
-                target: firstTopCircle
-                property: "rotation"
-                from: 0
-                to: 180
-                duration: 1000
-                easing.type: Easing.Linear
+            Behavior on rotation {
+                NumberAnimation {
+                    duration: 1000
+                    easing.type: Easing.Linear
+                }
             }
         }
 
@@ -1015,14 +982,11 @@ Pane {
             opacity: 0.13
             rotation: 0
 
-            NumberAnimation {
-                id: secondTopCircleRotationAnim
-                target: secondTopCircle
-                property: "rotation"
-                from: 0
-                to: 100
-                duration: 1000
-                easing.type: Easing.Linear
+            Behavior on rotation {
+                NumberAnimation {
+                    duration: 1000
+                    easing.type: Easing.Linear
+                }
             }
         }
 
@@ -1078,19 +1042,22 @@ Pane {
                 case 7: // BACKGROUND ANIMATIONS
                     blackOverlay.opacity = 0
                     mask.linesRespawnAnimationTrigger()
-                    horizontalTopBarSlideInAnimation.start()
-                    horizontalBotBarSlideInAnimation.start()
-                    firstTopCircleRotationAnim.start()
-                    secondTopCircleRotationAnim.start()
-                    firstBottomCircleRotationAnim.start()
-                    secondBottomCircleRotationAnim.start()
+                    horizontalTopBarContainer.width = 1920
+                    horizontalBotBarContainer.width = 1920
+                    
+                    firstDiagonalBar.width = 2700
+                    secondDiagonalBar.width = 2700
+                    thirdDiagonalBar.width = 2700
 
-                    firstDiagonalBarWidthAnim.start()
-                    secondDiagonalBarWidthAnim.start()
-                    thirdDiagonalBarWidthAnim.start()
-                    firstTopDiagonalBarWidthAnim.start()
-                    secondTopDiagonalBarWidthAnim.start()
-                    thirdTopDiagonalBarWidthAnim.start()
+                    firstTopDiagonalBar.width = 2700
+                    secondTopDiagonalBar.width = 2700
+                    thirdTopDiagonalBar.width = 2700
+
+                    firstBottomCircle.rotation = 270
+                    secondBottomCircle.rotation = 270
+
+                    firstTopCircle.rotation = 90
+                    secondTopCircle.rotation = 90
                     break
                 case 11: // UI SPAWN
                     form.header.spawn()
@@ -1098,17 +1065,53 @@ Pane {
                     form.input.spawn()
                     form.infoBoard.spawn()
                     break
-                case 44:
+            }
+            step++
+        }
+    }
+
+    Timer {
+        id: closingAnimationDirector
+        interval: 100
+        running: false
+        repeat: true
+
+        property int step: 0
+
+        onTriggered: {
+            switch (step) {
+                case 0: // UI DESPAWN
+                    openingAnimationDirector.stop()
                     form.header.despawn()
                     form.avatarContainer.despawn()
                     form.input.despawn()
                     form.infoBoard.despawn()
                     break
-                case 65: // Fake login, to implement
+                case 1: // Background despawn
+                    firstDiagonalBar.width = 0
+                    secondDiagonalBar.width = 0
+                    thirdDiagonalBar.width = 0
+
+                    firstTopDiagonalBar.width = 0
+                    secondTopDiagonalBar.width = 0
+                    thirdTopDiagonalBar.width = 0
+
+                    firstBottomCircle.rotation = 180
+                    secondBottomCircle.rotation = 180
+
+                    firstTopCircle.rotation = 0
+                    secondTopCircle.rotation = 0
+                    break
+                case 5:
+                    horizontalTopBarContainer.width = 0
+                    horizontalBotBarContainer.width = 0
+                    break
+                case 3:
                     blackOverlay.opacity = 1
                     root.trigRespawnTrigger()
-                    openingAnimationDirector.stop()
                     break
+                case 7:
+                    closingAnimationDirector.stop()
             }
             step++
         }

@@ -135,7 +135,7 @@ ColumnLayout {
     }
 
     // Input and Avatar
-    Row {
+    Item {
         width: parent.width
         Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
         Layout.fillWidth: true

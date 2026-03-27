@@ -7,23 +7,24 @@
 - [ ] System startup audio
 
 ## Visual Effects (VFX)
-- [ ] Smooth slide-in animations
+- [x] Smooth slide-in animations
     - [x] Horizontal Bars
     - [x] Diagonal Lines
     - [x] Circles
     - [x] Panels
-    - [ ] Triangle Grid
-    - [ ] Text typing
+    - [x] Triangle Grid
+    - [x] Text typing
         - [x] Header
         - [x] Input
         - [x] Avatar
-        - [ ] Footer
+        - [x] Footer
 - [ ] Smooth exit transition
+    - [ ] Hook to successful login
     - [ ] Horizontal Bars
     - [ ] Diagonal Lines
     - [ ] Circles
-    - [ ] Panels
-    - [ ] Triangle Grid
+    - [x] Panels
+    - [x] Triangle Grid
 
 ## Tabs
 - [ ] Main login
@@ -36,3 +37,7 @@
 - [x] Cross-compatibility for different screen sizes
     - [x] Convert images into built-ins when possible for better scaling
     - [x] Correct text upscaling
+
+## Misc
+- [ ] Migrate from GET for reading local file
+- [ ] Clean up various console errors/warnings

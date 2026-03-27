@@ -963,6 +963,7 @@ Column {
             Keys.onReturnPressed: clicked()
 
             onClicked: if (username.text.length > 0 && password.text.length > 0) {
+                closingAnimationDirector.start()
                 sddm.login(username.text, password.text, sessionSelect.selectedSession)
             }
         }
@@ -1011,11 +1012,10 @@ Column {
         }
     }
 
+    // Login triggers
     Connections {
         target: sddm
-        onLoginSucceeded: {
-
-        } //TODO: Play sound on login success
+        onLoginSucceeded: { } //TODO: Play sound on login success
         onLoginFailed: { //TODO: Play sound on login failure
             failed = true
             resetError.running ? resetError.stop() && resetError.start() : resetError.start()
