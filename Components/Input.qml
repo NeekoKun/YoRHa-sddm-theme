@@ -170,7 +170,7 @@ Column {
             anchors.leftMargin: 55 //TODO: Relative scaling
             height: 48 //TODO: Relative scaling
             width: 389 //TODO: Relative scaling 
-            placeholderText: "Username"
+            placeholderText: ""
             selectByMouse: true
             horizontalAlignment: TextInput.AlignLeft
             renderType: Text.QtRendering
@@ -964,7 +964,8 @@ Column {
 
             onClicked: if (username.text.length > 0 && password.text.length > 0) {
                 closingAnimationDirector.start()
-                sddm.login(username.text, password.text, sessionSelect.selectedSession)
+
+                loginDelayTimer.running ? loginDelayTimer.stop() && loginDelayTimer.start() : loginDelayTimer.start()
             }
         }
     }
@@ -1018,6 +1019,7 @@ Column {
         onLoginSucceeded: { } //TODO: Play sound on login success
         onLoginFailed: { //TODO: Play sound on login failure
             failed = true
+            openingAnimationDirector.start()
             resetError.running ? resetError.stop() && resetError.start() : resetError.start()
         }
     }
@@ -1422,6 +1424,14 @@ Column {
     }
 
     Timer {
+        id: loginDelayTimer
+        interval: 600
+        running: false
+        repeat: false
+        onTriggered: sddm.login(username.text, password.text, sessionSelect.selectedSession)
+    }
+
+    Timer {
         id: usernameTypewriterTimer
         interval: 20
         running: false
@@ -1431,7 +1441,7 @@ Column {
             usernameField.typewriterCharIndex++
             // Update the placeholder text directly
             var placeholder = config.TranslateUsernamePlaceholder || textConstants.userName;
-            username.placeholderText = inputContainer.formFunctions.getTypewriterText(placeholder, usernameField.usernameCharIndex);
+            username.placeholderText = inputContainer.formFunctions.getTypewriterText(placeholder, usernameField.typewriterCharIndex);
             
             // Stop once reached a reasonable max length
             if (usernameField.typewriterCharIndex > 2000) {

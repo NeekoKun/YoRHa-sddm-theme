@@ -1032,6 +1032,7 @@ Pane {
             switch (step) {
                 case 0:
                     curtain.opacity = 0
+                    closingAnimationDirector.stop()
                     break
                 case 1:
                     mask.linesDespawnAnimationTrigger()
@@ -1065,8 +1066,13 @@ Pane {
                     form.input.spawn()
                     form.infoBoard.spawn()
                     break
+                case 12:
+                    openingAnimationDirector.stop()
+                    step = -1
+                    break
             }
             step++
+            console.log("Animation step: " + step)
         }
     }
 
@@ -1112,6 +1118,7 @@ Pane {
                     break
                 case 7:
                     closingAnimationDirector.stop()
+                    step = -1
             }
             step++
         }

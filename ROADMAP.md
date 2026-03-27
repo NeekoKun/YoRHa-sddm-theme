@@ -18,11 +18,11 @@
         - [x] Input
         - [x] Avatar
         - [x] Footer
-- [ ] Smooth exit transition
-    - [ ] Hook to successful login
-    - [ ] Horizontal Bars
-    - [ ] Diagonal Lines
-    - [ ] Circles
+- [x] Smooth exit transition
+    - [x] Hook to successful login (kind of)
+    - [x] Horizontal Bars
+    - [x] Diagonal Lines
+    - [x] Circles
     - [x] Panels
     - [x] Triangle Grid
 
