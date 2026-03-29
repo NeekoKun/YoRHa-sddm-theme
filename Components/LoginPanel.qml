@@ -24,19 +24,13 @@ import SddmComponents 2.0 as SDDM
 import QtQuick.Controls 2.4
 import QtGraphicalEffects 1.0
 
-ColumnLayout {
+Item {
     id: formContainer
-    anchors.fill: parent
     anchors.topMargin: 60 //TODO: Relative scaling
     anchors.leftMargin: 63 //TODO: Relative scaling
     anchors.rightMargin: 63 //TODO: Relative scaling
 
     SDDM.TextConstants { id: textConstants }
-
-    FontLoader {
-        id: rodinFont
-        source: Qt.resolvedUrl("../fonts/Rodin-Pro-M.otf")
-    }
 
     property alias header: header
     property alias input: input
@@ -60,19 +54,34 @@ ColumnLayout {
         return typed;
     }
 
+    function spawn() {
+        header.spawn()
+        avatarContainer.spawn()
+        input.spawn()
+    }
+
+    function despawn() {
+        header.despawn()
+        avatarContainer.despawn()
+        input.despawn()
+    }
+
     // HEADER - Simple text with HeaderText aligned to the left
     Item {
         id: header
-        opacity: 0
-        Layout.fillWidth: true
-        Layout.preferredHeight: 60 //TODO: Relative scaling
-
+        opacity: 1
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 60
+        
         function spawn() {
             header.opacity = 1
+            headerTypewriterBackwardTimer.stop()
             headerTypewriterForwardTimer.start()
         }
 
         function despawn() {
+            headerTypewriterForwardTimer.stop()
             headerTypewriterBackwardTimer.start()
         }
 
@@ -86,7 +95,7 @@ ColumnLayout {
             anchors.verticalCenter: parent.verticalCenter
             anchors.verticalCenterOffset: 5
             text: formContainer.getTypewriterText(header.text, header.typewriterCharIndex)
-            font.family: formContainer.fontFamily
+            font.family: root.fontFamily
             font.pointSize: sizeHelper.height / 27
             color: "#000000"
             opacity: 0.27
@@ -98,7 +107,7 @@ ColumnLayout {
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
             text: formContainer.getTypewriterText("START SESSION", header.typewriterCharIndex)
-            font.family: formContainer.fontFamily
+            font.family: root.fontFamily
             font.pointSize: sizeHelper.height / 27
             color: "#34332B"
             opacity: 0.8
@@ -138,16 +147,16 @@ ColumnLayout {
     // Input and Avatar
     Item {
         width: parent.width
-        Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-        Layout.fillWidth: true
-        Layout.preferredHeight: sizeHelper.height / 10
-        Layout.leftMargin: 10 //TODO: Relative 
+        anchors.top: header.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 540 //TODO: Relative scaling
 
         // INPUT - Input fields aligned to the left
         Input {
             id: input
             anchors.verticalCenter: parent.verticalCenter
-            fontFamily: formContainer.fontFamily
+            fontFamily: root.fontFamily
 
             loginPanelButton: formContainer.loginPanelButton
         }
@@ -165,6 +174,7 @@ ColumnLayout {
             function spawn() {
                 avatarContainerFadeIn.start()
                 avatarContainerSlideIn.start()
+                avatarTypewriterBackward.stop()
                 avatarTypewriterForward.start()
             }
 
@@ -213,7 +223,7 @@ ColumnLayout {
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.leftMargin: 30 //TODO: Relative scaling
                         text: formContainer.getTypewriterText(logoHeader.text, avatarContainer.typewriterCharIndex)
-                        font.family: formContainer.fontFamily
+                        font.family: root.fontFamily
                         font.pointSize: sizeHelper.height / 67
                         color: "#D5CFAF"
                         opacity: 0.9
@@ -255,7 +265,7 @@ ColumnLayout {
 
                     Text {
                         font.pointSize: sizeHelper.height / 67
-                        font.family: formContainer.fontFamily
+                        font.family: root.fontFamily
                         color: "#34332B"
                         text: formContainer.getTypewriterText(logoCaption.text, avatarContainer.typewriterCharIndex)
                         opacity: 0.8
@@ -335,7 +345,7 @@ ColumnLayout {
                         anchors.right: parent.right
                         anchors.top: logoCaption.bottom
                         font.pointSize: sizeHelper.height / 80
-                        font.family: formContainer.fontFamily
+                        font.family: root.fontFamily
                         color: "#34332B"
                         opacity: 0.8
                         wrapMode: Text.WordWrap
@@ -346,7 +356,7 @@ ColumnLayout {
                         anchors.right: parent.right
                         anchors.bottom: parent.bottom
                         font.pointSize: sizeHelper.height / 80
-                        font.family: formContainer.fontFamily
+                        font.family: root.fontFamily
                         color: "#34332B"
                         opacity: 0.8
                         text: formContainer.getTypewriterText(logoQuote.quoteAuthor, avatarContainer.typewriterCharIndex)
@@ -414,6 +424,16 @@ ColumnLayout {
                 easing.type: Easing.Linear
             }
 
+            Connections {
+                target: avatarTypewriterForward
+
+                function onStarted() {
+                    // Ensure fully visible text at the end of the animation
+                    logoHeaderText.opacity = 1
+                    logoCaption.opacity = 1
+                    logoQuote.opacity = 1
+                }
+            }
 
             Connections {
                 target: avatarTypewriterBackward

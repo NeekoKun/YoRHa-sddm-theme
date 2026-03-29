@@ -105,7 +105,7 @@ Rectangle {
 
             text: getTypewriterText(date, footer.typewriterCharIndex)
             font.pointSize: 18
-            font.family: formContainer.fontFamily
+            font.family: root.fontFamily
             color: "#34332B"
             opacity: footer.typewriterCharIndex > 0 ? 0.8 : 0
         }
@@ -124,7 +124,7 @@ Rectangle {
             id: currentTime
             anchors.verticalCenter: parent.verticalCenter
             font.pointSize: 18
-            font.family: formContainer.fontFamily
+            font.family: root.fontFamily
             color: "#34332B"
 
             property string time: Qt.formatTime(new Date(), "HH:mm")
@@ -147,7 +147,7 @@ Rectangle {
             id: systemInfo
             anchors.verticalCenter: parent.verticalCenter
             font.pointSize: 18
-            font.family: formContainer.fontFamily
+            font.family: root.fontFamily
             color: "#34332B"
             opacity: footer.typewriterCharIndex > currentDate.date.length + currentTime.time.length + 2 ? 0.8 : 0
 

@@ -132,7 +132,7 @@ Item {
 
             color: root.palette.text
 
-            layer.enabled: false
+            layer.enabled: true
             layer.effect: OpacityMask {
                 invert: true
                 maskSource: Image {

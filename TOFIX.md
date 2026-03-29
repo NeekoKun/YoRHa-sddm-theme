@@ -1,3 +1,5 @@
 - [x] Username placeholder is invisible
 - [x] On login fail, call openingAnimationDirector
 - [ ] Reimplement tab navigation
+- [ ] Automatic active on login panel
+- [ ] Change README preview

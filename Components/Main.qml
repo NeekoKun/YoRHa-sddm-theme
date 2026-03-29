@@ -44,6 +44,8 @@ Pane {
         source: Qt.resolvedUrl("../fonts/Rodin-Pro-M.otf")
     }
 
+    property string fontFamily: rodinFont.name
+
     focus: true
 
     Rectangle {
@@ -487,7 +489,6 @@ Pane {
                         buttonIcon: Qt.resolvedUrl("../Assets/login_icon.png")
 
                         rightButton: controlPanelButtonWrapper
-                        button.focus: true
 
                         fontFamily: rodinFont.name
                     }
@@ -519,8 +520,8 @@ Pane {
                 z: 9999
             }
 
-            LoginForm {
-                id: form
+            LoginPanel {
+                id: loginPanel
 
                 anchors.top: panelButtonsContainer.bottom
                 anchors.bottom: parent.bottom
@@ -531,6 +532,20 @@ Pane {
                 loginPanelButton: loginPanelButtonWrapper
 
                 visible: loginPanelButtonWrapper.active
+            }
+
+            ControlPanel {
+                id: controlPanel
+
+                anchors.top: panelButtonsContainer.bottom
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottomMargin: 350
+
+                controlPanelButton: controlPanelButtonWrapper
+
+                visible: controlPanelButtonWrapper.active
             }
 
             Footer {
@@ -610,6 +625,28 @@ Pane {
                     to: -60 //TODO: Relative scaling
                     duration: 600
                     easing.type: Easing.OutCubic
+                }
+            }
+
+            Connections {
+                target: loginPanelButtonWrapper
+                function onActiveChanged() {
+                    if (loginPanelButtonWrapper.active) {
+                        loginPanel.spawn()
+                    } else {
+                        loginPanel.despawn()
+                    }
+                }
+            }
+
+            Connections {
+                target: controlPanelButtonWrapper
+                function onActiveChanged() {
+                    if (controlPanelButtonWrapper.active) {
+                        controlPanel.spawn()
+                    } else {
+                        controlPanel.despawn()
+                    }
                 }
             }
 
@@ -1241,9 +1278,7 @@ Pane {
                     secondTopCircle.rotation = 90
                     break
                 case 11: // UI SPAWN
-                    form.header.spawn()
-                    form.avatarContainer.spawn()
-                    form.input.spawn()
+                    loginPanelButtonWrapper.button.forceActiveFocus()
                     infoBoard.spawn()
                     break
                 case 12:

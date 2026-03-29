@@ -478,7 +478,7 @@ Column {
         
         property int sessionSelectCharIndex: 0
         
-        height: 15 * 5
+        height: 75
         width: 500 //TODO: Relative scaling
         anchors.left: parent.left
 
@@ -1130,9 +1130,6 @@ Column {
 
             ScriptAction {
                 script: {
-                    if (config.ForcePasswordFocus === "true") {
-                        password.focus = true
-                    }
                     passwordTypewriterTimer.start()
                 }
             }
