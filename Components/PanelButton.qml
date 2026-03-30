@@ -27,8 +27,8 @@ Item {
     id: panelButtonWrapper
 
     anchors.top: parent.top
-    anchors.bottom: parent.bottom
-    anchors.bottomMargin: 23
+    
+    height: 48
     width: 214
 
     required property string buttonText

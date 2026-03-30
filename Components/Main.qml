@@ -468,26 +468,50 @@ Pane {
                 anchors.leftMargin: 63
                 anchors.rightMargin: 63
                 height: 71
-
-                Rectangle {
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-                    anchors.left: parent.left
-                    anchors.bottomMargin: 23
-                    width: 16
-                    color: "#000000"
-                    opacity: 0.13
+                
+                function removeActive() {
+                    loginPanelButtonWrapper.active = false
+                    controlPanelButtonWrapper.active = false
+                    informationPanelButtonWrapper.active = false
                 }
 
-                Rectangle {
+                function spawn() {
+                    panelOpeningAnimation.start()
+                }
+
+                function despawn() {
+                    panelClosingAnimation.start()
+                }
+
+                Item {
+                    id: panelButtonsVerticalBar
+
                     anchors.top: parent.top
                     anchors.bottom: parent.bottom
                     anchors.left: parent.left
-                    anchors.leftMargin: 22
                     anchors.bottomMargin: 23
-                    width: 4
-                    color: "#000000"
-                    opacity: 0.13
+
+                    width: 26
+
+                    opacity: 0
+
+                    Rectangle {
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.left: parent.left
+                        width: 16
+                        color: "#000000"
+                        opacity: 0.13
+                    }
+
+                    Rectangle {
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.right: parent.right
+                        width: 4
+                        color: "#000000"
+                        opacity: 0.13
+                    }
                 }
 
                 Row {
@@ -502,6 +526,9 @@ Pane {
                         buttonText: "SESSION"
                         buttonIcon: Qt.resolvedUrl("../Assets/login_icon.png")
 
+                        anchors.topMargin: -40
+                        opacity: 0
+
                         rightButton: controlPanelButtonWrapper
 
                         fontFamily: rodinFont.name
@@ -512,6 +539,9 @@ Pane {
                         id: controlPanelButtonWrapper
                         buttonText: "CONTROL"
                         buttonIcon: Qt.resolvedUrl("../Assets/control_icon.png")
+
+                        anchors.topMargin: -40
+                        opacity: 0
 
                         leftButton: loginPanelButtonWrapper
                         rightButton: informationPanelButtonWrapper
@@ -525,13 +555,196 @@ Pane {
                         buttonText: "SYSTEM"
                         buttonIcon: Qt.resolvedUrl("../Assets/info_icon.png")
 
+                        anchors.topMargin: -40
+                        opacity: 0
+
                         leftButton: controlPanelButtonWrapper
 
                         fontFamily: rodinFont.name
                     }
                 }
 
-                z: 9999
+                ParallelAnimation {
+                    id: panelOpeningAnimation
+
+                    NumberAnimation {
+                        target: panelButtonsVerticalBar
+                        property: "opacity"
+                        from: 0
+                        to: 1
+                        duration: 400
+                        easing.type: Easing.OutCubic
+                    }
+
+                    // Login Panel Button
+                    SequentialAnimation {
+                        PauseAnimation { duration: 0 }
+
+                        ParallelAnimation {
+                            NumberAnimation {
+                                target: loginPanelButtonWrapper
+                                property: "anchors.topMargin"
+                                from: -40
+                                to: 0
+                                duration: 400
+                                easing.type: Easing.OutCubic
+                            }
+
+                            NumberAnimation {
+                                target: loginPanelButtonWrapper
+                                property: "opacity"
+                                from: 0
+                                to: 1
+                                duration: 400
+                                easing.type: Easing.OutCubic
+                            }
+                        }
+
+                        ScriptAction {
+                            script: {
+                                loginPanelButtonWrapper.button.forceActiveFocus()
+                            }
+                        }
+                    }
+
+                    SequentialAnimation {
+                        PauseAnimation { duration: 200 }
+
+                        ParallelAnimation {
+                            NumberAnimation {
+                                target: controlPanelButtonWrapper
+                                property: "anchors.topMargin"
+                                from: -40
+                                to: 0
+                                duration: 400
+                                easing.type: Easing.OutCubic
+                            }
+
+                            NumberAnimation {
+                                target: controlPanelButtonWrapper
+                                property: "opacity"
+                                from: 0
+                                to: 1
+                                duration: 400
+                                easing.type: Easing.OutCubic
+                            }
+                        }
+                    }
+
+                    SequentialAnimation {
+                        PauseAnimation { duration: 400 }
+
+                        ParallelAnimation {
+                            NumberAnimation {
+                                target: informationPanelButtonWrapper
+                                property: "anchors.topMargin"
+                                from: -40
+                                to: 0
+                                duration: 400
+                                easing.type: Easing.OutCubic
+                            }
+
+                            NumberAnimation {
+                                target: informationPanelButtonWrapper
+                                property: "opacity"
+                                from: 0
+                                to: 1
+                                duration: 400
+                                easing.type: Easing.OutCubic
+                            }
+                        }
+                    }
+                }
+
+                ParallelAnimation {
+                    id: panelClosingAnimation
+
+                    NumberAnimation {
+                        target: panelButtonsVerticalBar
+                        property: "opacity"
+                        from: 1
+                        to: 0
+                        duration: 400
+                        easing.type: Easing.OutCubic
+                    }
+
+                    // Login Panel Button
+                    SequentialAnimation {
+                        PauseAnimation { duration: 400 }
+
+                        ParallelAnimation {
+                            NumberAnimation {
+                                target: loginPanelButtonWrapper
+                                property: "anchors.topMargin"
+                                from: 0
+                                to: -40
+                                duration: 400
+                                easing.type: Easing.OutCubic
+                            }
+
+                            NumberAnimation {
+                                target: loginPanelButtonWrapper
+                                property: "opacity"
+                                from: 1
+                                to: 0
+                                duration: 400
+                                easing.type: Easing.OutCubic
+                            }
+                        }
+                    }
+
+                    // Control Panel Button
+                    SequentialAnimation {
+                        PauseAnimation { duration: 200 }
+
+                        ParallelAnimation {
+                            NumberAnimation {
+                                target: controlPanelButtonWrapper
+                                property: "anchors.topMargin"
+                                from: 0
+                                to: -40
+                                duration: 400
+                                easing.type: Easing.OutCubic
+                            }
+
+                            NumberAnimation {
+                                target: controlPanelButtonWrapper
+                                property: "opacity"
+                                from: 1
+                                to: 0
+                                duration: 400
+                                easing.type: Easing.OutCubic
+                            }
+                        }
+                    }
+
+                    // Information Panel Button
+                    SequentialAnimation {
+                        PauseAnimation { duration: 0 }
+
+                        ParallelAnimation {
+                            NumberAnimation {
+                                target: informationPanelButtonWrapper
+                                property: "anchors.topMargin"
+                                from: 0
+                                to: -40
+                                duration: 400
+                                easing.type: Easing.OutCubic
+                            }
+
+                            NumberAnimation {
+                                target: informationPanelButtonWrapper
+                                property: "opacity"
+                                from: 1
+                                to: 0
+                                duration: 400
+                                easing.type: Easing.OutCubic
+                            }
+                        }
+                    }
+                }
+
+                z: 9998
             }
 
             LoginPanel {
@@ -1292,10 +1505,10 @@ Pane {
                     secondTopCircle.rotation = 90
                     break
                 case 11: // UI SPAWN
-                    loginPanelButtonWrapper.button.forceActiveFocus()
+                    panelButtonsContainer.spawn()
                     infoBoard.spawn()
                     break
-                case 12:
+                case 22:
                     openingAnimationDirector.stop()
                     step = -1
                     break
@@ -1316,9 +1529,8 @@ Pane {
             switch (step) {
                 case 0: // UI DESPAWN
                     openingAnimationDirector.stop()
-                    form.header.despawn()
-                    form.avatarContainer.despawn()
-                    form.input.despawn()
+                    panelButtonsContainer.removeActive()
+                    panelButtonsContainer.despawn()
                     infoBoard.despawn()
                     break
                 case 1: // Background despawn
@@ -1347,6 +1559,7 @@ Pane {
                 case 7:
                     closingAnimationDirector.stop()
                     step = -1
+                    break
             }
             step++
         }
