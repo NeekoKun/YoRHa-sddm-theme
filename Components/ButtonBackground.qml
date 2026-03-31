@@ -26,10 +26,12 @@ Item {
     id: backgroundRoot
 
     property bool focused: false
+    property bool popupOpened: false
     property string textToDisplay: ""
+    property bool enabled: true
 
-
-    property int typewriterCharIndex: 0
+    signal spawned()
+    signal despawned()
 
     function spawn() {
         spawnAnimations.start()
@@ -38,6 +40,9 @@ Item {
     function despawn() {
         despawnAnimations.start()
     }
+
+    property int typewriterCharIndex: 0
+    property real opacityMultiplier: enabled ? 1 : 0.6
 
     // VERTICAL BAR
     Image {
@@ -132,7 +137,7 @@ Item {
             height: 2 //TODO: Relative scaling
             anchors.bottom: parent.top
             anchors.bottomMargin: -2
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.right: parent.right
             color: "#000000"
             opacity: 0
 
@@ -140,6 +145,13 @@ Item {
                 NumberAnimation {
                     duration: 100
                     easing.type: Easing.InOutQuad
+                }
+            }
+
+            Behavior on width {
+                NumberAnimation {
+                    duration: 200
+                    easing.type: Easing.OutExpo
                 }
             }
         }
@@ -150,7 +162,7 @@ Item {
             height: 2 //TODO: Relative scaling
             anchors.top: parent.bottom
             anchors.topMargin: -2
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.right: parent.right
             color: "#000000"
             opacity: 0
 
@@ -160,11 +172,21 @@ Item {
                     easing.type: Easing.InOutQuad
                 }
             }
+
+            Behavior on width {
+                NumberAnimation {
+                    duration: 200
+                    easing.type: Easing.OutExpo
+                }
+            }
         }
 
         // SQUARE
         Rectangle {
             id: buttonSquare
+
+            property real baseOpacity: 0 //0.8
+
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.bottom: parent.bottom
@@ -173,7 +195,7 @@ Item {
             anchors.bottomMargin: 12
             width: height
             color: root.palette.text
-            opacity: 0 //0.8
+            opacity: baseOpacity * opacityMultiplier
             z: 5
         }
 
@@ -181,6 +203,7 @@ Item {
             id: buttonText
 
             property string textToDisplay: backgroundRoot.textToDisplay
+            property real baseOpacity: 0 //1
 
             text: root.getTypewriterText(textToDisplay, backgroundRoot.typewriterCharIndex)
             anchors.left: buttonSquare.right
@@ -190,7 +213,7 @@ Item {
             font.pointSize: 15
 
             color: root.palette.text
-            opacity: 0 //1
+            opacity: baseOpacity * opacityMultiplier
             
             z: 3
         }
@@ -206,7 +229,7 @@ Item {
             }
             PropertyChanges { // Darken the background
                 target: buttonDarkener
-                opacity: 0.5
+                opacity: 0.5 * opacityMultiplier
                 width: buttonBackground.width
             }
             PropertyChanges { // Add shadow to the background
@@ -216,12 +239,49 @@ Item {
             PropertyChanges { // Pop out the sidebars
                 target: buttonUpwardsSidebar
                 anchors.bottomMargin: 4 //TODO: Relative scaling
-                opacity: 0.63
+                opacity: 0.63 * opacityMultiplier
             }
             PropertyChanges { // Pop out the sidebars
                 target: buttonDownwardsSidebar
                 anchors.topMargin: 4 //TODO: Relative scaling
+                opacity: 0.63 * opacityMultiplier
+            }
+            PropertyChanges { // Highlight square
+                target: buttonSquare
+                color: root.palette.highlight
+            }
+        },
+        State { // When the popup is open:
+            name: "opened"
+            when: popupOpened
+            PropertyChanges { // Stop the animation
+                target: buttonDarkenerAnimation
+                running: false
+            }
+            PropertyChanges { // Lower the opacity
+                target: buttonDarkener
+                opacity: 0.3
+                width: parent.width
+            }
+            PropertyChanges { // Widen button
+                target: backgroundRoot.parent
+                width: 453 + 30 //TODO: Relative scaling
+            }
+            PropertyChanges { // Pop upwards sidebar
+                target: buttonUpwardsSidebar
+                width: 0
                 opacity: 0.63
+                anchors.bottomMargin: 4 //TODO: Relative scaling
+            }
+            PropertyChanges { // Pop downwards sidebar
+                target: buttonDownwardsSidebar
+                width: 0
+                opacity: 0.63
+                anchors.topMargin: 4 //TODO: Relative scaling
+            }
+            PropertyChanges { // Highlight text
+                target: buttonText
+                color: root.palette.highlight
             }
             PropertyChanges { // Highlight square
                 target: buttonSquare
@@ -235,7 +295,7 @@ Item {
         ParallelAnimation {
             NumberAnimation {
                 target: buttonSquare
-                property: "opacity"
+                property: "baseOpacity"
                 from: 0
                 to: 0.8
                 duration: 200
@@ -276,54 +336,68 @@ Item {
         
         ScriptAction {
             script: {
-                buttonText.opacity = 1
+                buttonText.baseOpacity = 1
                 buttonTypewriter.start()
+                spawned()
             }
         }
     }
 
-    ParallelAnimation {
+    SequentialAnimation {
         id: despawnAnimations
-        NumberAnimation {
-            target: buttonSquare
-            property: "opacity"
-            from: 0.8
-            to: 0
-            duration: 200
-        }
 
-        NumberAnimation {
-            target: backgroundRoot.parent
-            property: "opacity"
-            from: 1
-            to: 0
-            duration: 200
-        }
+        ParallelAnimation {
+            NumberAnimation {
+                target: buttonSquare
+                property: "baseOpacity"
+                to: 0
+                duration: 200
+            }
 
-        NumberAnimation {
-            target: buttonVerticalBar
-            property: "opacity"
-            from: 0.13
-            to: 0
-            duration: 200
+            NumberAnimation {
+                target: backgroundRoot.parent
+                property: "opacity"
+                to: 0
+                duration: 200
+            }
+
+            NumberAnimation {
+                target: buttonVerticalBar
+                property: "opacity"
+                to: 0
+                duration: 200
+            }
+
+            ScriptAction {
+                script: {
+                    buttonText.baseOpacity = 0
+                    buttonTypewriter.stop()
+                    backgroundRoot.typewriterCharIndex = 0
+                }
+            }
         }
 
         ScriptAction {
-            script: {
-                buttonText.opacity = 0
-                buttonTypewriter.stop()
-                backgroundRoot.typewriterCharIndex = 0
-            }
+            script: despawned()
         }
     }
 
-    NumberAnimation {
+    SequentialAnimation {
         id: buttonTypewriter
-        target: backgroundRoot
-        property: "typewriterCharIndex"
-        from: 0
-        to: buttonText.textToDisplay.length
-        duration: 200
-        easing.type: Easing.Linear
+        
+        NumberAnimation {
+            target: backgroundRoot
+            property: "typewriterCharIndex"
+            from: 0
+            to: buttonText.textToDisplay.length
+            duration: 200
+            easing.type: Easing.Linear
+        }
+
+        NumberAnimation {
+            target: backgroundRoot
+            property: "typewriterCharIndex"
+            to: 2000 // Arbitrary large number to ensure the full text is displayed after the animation finishes
+        }
     }
 }
