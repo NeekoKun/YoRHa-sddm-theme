@@ -38,20 +38,6 @@ Item {
 
     required property PanelButton loginPanelButton
 
-    function getTypewriterText(fullText, charCount) {
-        var chars = "abcdefghijklmnopqrstuvwxyz";
-        var typed = fullText.substring(0, Math.min(charCount, fullText.length));
-
-        if (charCount < fullText.length ) {
-            if (fullText.charAt(typed.length) == fullText.charAt(typed.length).toUpperCase()) { // next character is uppercase, probably a new word, add a space for better readability
-                typed += chars.charAt(Math.floor(Math.random() * chars.length)).toUpperCase();
-            } else {
-                typed += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-        }
-        return typed;
-    }
-
     function spawn() {
         header.spawn()
         avatarContainer.spawn()
@@ -91,7 +77,7 @@ Item {
             anchors.leftMargin: 5
             anchors.verticalCenter: parent.verticalCenter
             anchors.verticalCenterOffset: 5
-            text: formContainer.getTypewriterText(header.text, header.typewriterCharIndex)
+            text: root.getTypewriterText(header.text, header.typewriterCharIndex)
             font.family: root.fontFamily
             font.pointSize: sizeHelper.height / 27
             color: "#000000"
@@ -103,7 +89,7 @@ Item {
             id: headerText
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
-            text: formContainer.getTypewriterText("START SESSION", header.typewriterCharIndex)
+            text: root.getTypewriterText("START SESSION", header.typewriterCharIndex)
             font.family: root.fontFamily
             font.pointSize: sizeHelper.height / 27
             color: "#34332B"
@@ -266,7 +252,7 @@ Item {
                         font.pointSize: sizeHelper.height / 67
                         font.family: root.fontFamily
                         color: "#34332B"
-                        text: formContainer.getTypewriterText(logoCaption.text, avatarContainer.typewriterCharIndex)
+                        text: root.getTypewriterText(logoCaption.text, avatarContainer.typewriterCharIndex)
                         opacity: 0.8
                     }
                 }
@@ -348,7 +334,7 @@ Item {
                         color: "#34332B"
                         opacity: 0.8
                         wrapMode: Text.WordWrap
-                        text: formContainer.getTypewriterText(logoQuote.quoteText, avatarContainer.typewriterCharIndex)
+                        text: root.getTypewriterText(logoQuote.quoteText, avatarContainer.typewriterCharIndex)
                     }
 
                     Text {
@@ -358,7 +344,7 @@ Item {
                         font.family: root.fontFamily
                         color: "#34332B"
                         opacity: 0.8
-                        text: formContainer.getTypewriterText(logoQuote.quoteAuthor, avatarContainer.typewriterCharIndex)
+                        text: root.getTypewriterText(logoQuote.quoteAuthor, avatarContainer.typewriterCharIndex)
                     }
                 }
             }

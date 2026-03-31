@@ -35,20 +35,6 @@ Rectangle {
     property alias typewriterForward: typewriterForward
     property alias typewriterBackward: typewriterBackward
 
-    function getTypewriterText(fullText, charCount) {
-        var chars = "abcdefghijklmnopqrstuvwxyz";
-        var typed = fullText.substring(0, Math.min(charCount, fullText.length));
-
-        if (charCount < fullText.length ) {
-            if (fullText.charAt(typed.length) == fullText.charAt(typed.length).toUpperCase()) { // next character is uppercase, probably a new word, add a space for better readability
-                typed += chars.charAt(Math.floor(Math.random() * chars.length)).toUpperCase();
-            } else {
-                typed += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-        }
-        return typed;
-    }
-
     // Fakeass dropshadow effect
     Rectangle {
         anchors.fill: parent
@@ -103,7 +89,7 @@ Rectangle {
                 return formattedDate
             }
 
-            text: getTypewriterText(date, footer.typewriterCharIndex)
+            text: root.getTypewriterText(date, footer.typewriterCharIndex)
             font.pointSize: 18
             font.family: root.fontFamily
             color: "#34332B"
@@ -129,7 +115,7 @@ Rectangle {
 
             property string time: Qt.formatTime(new Date(), "HH:mm")
 
-            text: getTypewriterText(currentTime.time, footer.typewriterCharIndex - currentDate.date.length - 1)
+            text: root.getTypewriterText(currentTime.time, footer.typewriterCharIndex - currentDate.date.length - 1)
             opacity: footer.typewriterCharIndex > currentDate.date.length + 1 ? 0.8 : 0
         }
 
@@ -148,12 +134,13 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             font.pointSize: 18
             font.family: root.fontFamily
+            font.capitalization: Qt.Capitalize
             color: "#34332B"
             opacity: footer.typewriterCharIndex > currentDate.date.length + currentTime.time.length + 2 ? 0.8 : 0
 
             property string system: (sddm.hostName || "YoRHa") + " System"
 
-            text: getTypewriterText(systemInfo.system, footer.typewriterCharIndex - currentDate.date.length - currentTime.time.length - 2)
+            text: root.getTypewriterText(systemInfo.system, footer.typewriterCharIndex - currentDate.date.length - currentTime.time.length - 2)
         }
     }
 

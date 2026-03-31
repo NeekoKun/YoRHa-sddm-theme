@@ -160,7 +160,7 @@ Column {
             font.pointSize: 15
             horizontalAlignment: TextInput.AlignLeft
             passwordCharacter: "*"
-            passwordMaskDelay: 0
+            passwordMaskDelay: config.PasswordHideDelay || 0
             renderType: Text.QtRendering
             color: password.activeFocus ? root.palette.highlight : root.palette.text
             leftPadding: 112
