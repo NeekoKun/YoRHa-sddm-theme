@@ -23,18 +23,16 @@ import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.4
 import QtGraphicalEffects 1.0
 import QtMultimedia 5.11
+import QtQuick.Window 2.11
 import "."
 
 Pane {
     id: root
 
-    height: config.ScreenHeight || Screen.height
-    width: config.ScreenWidth || Screen.ScreenWidth
+    height: Screen.height
+    width: Screen.width
 
-    LayoutMirroring.enabled: config.ForceRightToLeft == "true" ? true : Qt.application.layoutDirection === Qt.RightToLeft
-    LayoutMirroring.childrenInherit: true
-
-    padding: config.ScreenPadding
+    padding: 0
 
     palette.button: "#33000000"
     palette.highlight: "#C9C3A3"
@@ -43,16 +41,31 @@ Pane {
     SoundEffect {
         id: modalOpen
         source: Qt.resolvedUrl("../Assets/sfx/modal_open.wav")
+        volume: config.SoundVolume
     }
 
     SoundEffect {
         id: modalClose
         source: Qt.resolvedUrl("../Assets/sfx/modal_close.wav")
+        volume: config.SoundVolume
     }
 
     SoundEffect {
         id: focusSound
         source: Qt.resolvedUrl("../Assets/sfx/focus.wav")
+        volume: config.SoundVolume
+    }
+
+    SoundEffect {
+        id: popupOpenSound
+        source: Qt.resolvedUrl("../Assets/sfx/popup_open.wav")
+        volume: config.SoundVolume
+    }
+
+    SoundEffect {
+        id: popupCloseSound
+        source: Qt.resolvedUrl("../Assets/sfx/popup_close.wav")
+        volume: config.SoundVolume
     }
 
     FontLoader {
@@ -98,11 +111,11 @@ Pane {
     Item {
         id: sizeHelper
 
-        height: 1200
+        height: 1080
         width: 1920
 
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter // Does not update vertical center of window in real time
 
         // Mask
         Item {
@@ -607,21 +620,6 @@ Pane {
                         opacity: 0
 
                         leftButton: loginPanelButtonWrapper
-                        rightButton: informationPanelButtonWrapper
-
-                        fontFamily: rodinFont.name
-                    }
-
-                    // Future System Informations Button
-                    PanelButton {
-                        id: informationPanelButtonWrapper
-                        buttonText: "SYSTEM"
-                        buttonIcon: Qt.resolvedUrl("../Assets/info_icon.png")
-
-                        anchors.topMargin: -40
-                        opacity: 0
-
-                        leftButton: controlPanelButtonWrapper
 
                         fontFamily: rodinFont.name
                     }
@@ -670,6 +668,7 @@ Pane {
                         }
                     }
 
+                    // Control Panel Button
                     SequentialAnimation {
                         PauseAnimation { duration: 200 }
 
@@ -685,30 +684,6 @@ Pane {
 
                             NumberAnimation {
                                 target: controlPanelButtonWrapper
-                                property: "opacity"
-                                from: 0
-                                to: 1
-                                duration: 400
-                                easing.type: Easing.OutCubic
-                            }
-                        }
-                    }
-
-                    SequentialAnimation {
-                        PauseAnimation { duration: 400 }
-
-                        ParallelAnimation {
-                            NumberAnimation {
-                                target: informationPanelButtonWrapper
-                                property: "anchors.topMargin"
-                                from: -40
-                                to: 0
-                                duration: 400
-                                easing.type: Easing.OutCubic
-                            }
-
-                            NumberAnimation {
-                                target: informationPanelButtonWrapper
                                 property: "opacity"
                                 from: 0
                                 to: 1
@@ -772,31 +747,6 @@ Pane {
 
                             NumberAnimation {
                                 target: controlPanelButtonWrapper
-                                property: "opacity"
-                                from: 1
-                                to: 0
-                                duration: 400
-                                easing.type: Easing.OutCubic
-                            }
-                        }
-                    }
-
-                    // Information Panel Button
-                    SequentialAnimation {
-                        PauseAnimation { duration: 0 }
-
-                        ParallelAnimation {
-                            NumberAnimation {
-                                target: informationPanelButtonWrapper
-                                property: "anchors.topMargin"
-                                from: 0
-                                to: -40
-                                duration: 400
-                                easing.type: Easing.OutCubic
-                            }
-
-                            NumberAnimation {
-                                target: informationPanelButtonWrapper
                                 property: "opacity"
                                 from: 1
                                 to: 0
@@ -1513,7 +1463,7 @@ Pane {
         }
 
         MouseArea {
-            anchors.fill: backgroundImage
+            anchors.fill: sizeHelper
             onClicked: parent.forceActiveFocus()
         }
 
@@ -1521,6 +1471,7 @@ Pane {
             xScale: {
                 let scaleByWidth  = root.width  / sizeHelper.width
                 let scaleByHeight = root.height / sizeHelper.height
+                console.log(scaleByWidth)
                 return Math.min(scaleByWidth, scaleByHeight)  // fit within screen
             }
             yScale: xScale

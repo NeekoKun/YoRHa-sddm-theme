@@ -25,11 +25,6 @@ import QtGraphicalEffects 1.0
 import QtMultimedia 5.11
 
 Item {
-    SoundEffect {
-        id: focusFieldSound
-        source: Qt.resolvedUrl("../Assets/focus.wav")
-        volume: 1
-    }
     id: sessionButton
 
     focus: true
@@ -79,7 +74,7 @@ Item {
 
         onHighlightedIndexChanged: {
             if (popup.visible) {
-                focusFieldSound.play()
+                focusSound.play()
                 selectSession.currentIndex = highlightedIndex
             }
         }
@@ -234,7 +229,7 @@ Item {
 
                     Text {
                         id: itemText
-                        text: sessionButton.formFunctions.getTypewriterText(model.name, sessionButton.sessionCharIndex)
+                        text: root.getTypewriterText(model.name, sessionButton.sessionCharIndex)
                         leftPadding: itemSquare.width + 2 * itemSquare.anchors.leftMargin
                         font.pointSize: 15
                         font.family: inputContainer.fontFamily

@@ -176,7 +176,7 @@ Item {
                 [ "Emergency Power Down Protocol", "All systems forcibly powered off.\nMemory flushed.\nNo active processes." ],
                 [ "No Protocol", "No Protocol Selected.\nSelect a protocol to display details." ]
             ]
-            property var icon: [ "suspend.svg", "hibernate.svg", "reboot.svg", "shutdown.svg", "" ]
+            property var icon: [ "suspend.svg", "hibernate.svg", "reboot.svg", "shutdown.svg", "empty.svg" ]
 
             function spawn() {
                 descriptionContainerFadeIn.start()

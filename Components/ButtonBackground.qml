@@ -217,10 +217,17 @@ Item {
             
             z: 3
         }
+
+        Behavior on width {
+            NumberAnimation {
+                duration: 200
+                easing.type: Easing.OutCubic
+            }
+        }
     }
 
     states: [
-        State {
+        State { // When the button is focused:
             name: "focused"
             when: focused
             PropertyChanges { // Change text color
@@ -273,6 +280,10 @@ Item {
                 opacity: 0.63
                 anchors.bottomMargin: 4 //TODO: Relative scaling
             }
+            PropertyChanges {
+                target: buttonBackgroundContainer
+                width: 389 + 30
+            }
             PropertyChanges { // Pop downwards sidebar
                 target: buttonDownwardsSidebar
                 width: 0
@@ -287,8 +298,23 @@ Item {
                 target: buttonSquare
                 color: root.palette.highlight
             }
+            PropertyChanges {
+                target: buttonDarkener
+                opacity: 0.3
+            }
         }
     ]
+
+    onPopupOpenedChanged: {
+        if (!popupOpened) {
+            //buttonDarkener.width = buttonBackground.width
+            //buttonDarkener.opacity = 0.5
+            popupCloseSound.play()
+        } else {
+            //buttonDarkener.opacity = 0.3
+            popupOpenSound.play()
+        }
+    }
 
     SequentialAnimation {
         id: spawnAnimations

@@ -42,12 +42,6 @@ Item {
 
     property bool active: false
 
-    SoundEffect {
-        id: focusSound
-        source: Qt.resolvedUrl("../Assets/sfx/focus.wav")
-        volume: 1
-    }
-
     FocusScope {
         id: panelButton
         anchors.fill: parent

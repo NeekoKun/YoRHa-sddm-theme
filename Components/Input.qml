@@ -29,24 +29,6 @@ Column {
     id: inputContainer
     Layout.fillWidth: true
 
-    SoundEffect {
-        id: fieldFocusSound
-        source: Qt.resolvedUrl("../Assets/sfx/focus.wav")
-        volume: 1
-    }
-
-    SoundEffect {
-        id: popupOpenSound
-        source: Qt.resolvedUrl("../Assets/sfx/open.wav")
-        volume: 1
-    }
-
-    SoundEffect {
-        id: popupCloseSound
-        source: Qt.resolvedUrl("../Assets/sfx/close.wav")
-        volume: 1
-    }
-
     property Button exposeLogin: loginButton
     property bool failed
     property string fontFamily: "Arial"
@@ -103,12 +85,12 @@ Column {
             KeyNavigation.up: loginPanelButton.button
 
             Keys.onDownPressed: {
-                fieldFocusSound.play()
+                focusSound.play()
                 password.forceActiveFocus()
             }
 
             Keys.onUpPressed: {
-                fieldFocusSound.play()
+                focusSound.play()
                 loginPanelButton.button.forceActiveFocus()
             }
 
@@ -174,12 +156,12 @@ Column {
             KeyNavigation.down: sessionSelect
 
             Keys.onDownPressed: {
-                fieldFocusSound.play()
+                focusSound.play()
                 KeyNavigation.down.forceActiveFocus()
             }
 
             Keys.onUpPressed: {
-                fieldFocusSound.play()
+                focusSound.play()
                 KeyNavigation.up.forceActiveFocus()
             }
         }
@@ -224,29 +206,18 @@ Column {
             KeyNavigation.down: loginButton
 
             Keys.onUpPressed: {
-                fieldFocusSound.play()
+                focusSound.play()
                 KeyNavigation.up.forceActiveFocus()
             }
             Keys.onDownPressed: {
-                fieldFocusSound.play()
+                focusSound.play()
                 KeyNavigation.down.forceActiveFocus()
-            }
-
-            onPopupOpenedChanged: {
-                if (!popupOpened) {
-                    sessionDarkener.width = sessionBackground.width
-                    sessionDarkener.opacity = 0.5
-                    popupCloseSound.play()
-                } else {
-                    sessionDarkener.opacity = 0.3
-                    popupOpenSound.play()
-                }
             }
 
             Behavior on width {
                 NumberAnimation {
-                    duration: 500
-                    easing.type: Easing.OutExpo
+                    duration: 200
+                    easing.type: Easing.OutCubic
                 }
             }
 
@@ -310,7 +281,7 @@ Column {
 
             KeyNavigation.up: sessionSelect
             Keys.onUpPressed: {
-                fieldFocusSound.play()
+                focusSound.play()
                 KeyNavigation.up.forceActiveFocus()
             }
 
@@ -370,8 +341,8 @@ Column {
     // Login triggers
     Connections {
         target: sddm
-        onLoginSucceeded: { }
-        onLoginFailed: {
+        function onLoginSucceeded() { }
+        function onLoginFailed() {
             failed = true
             openingAnimationDirector.start()
             resetError.running ? resetError.stop() && resetError.start() : resetError.start()

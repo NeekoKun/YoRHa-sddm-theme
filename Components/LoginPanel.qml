@@ -278,57 +278,20 @@ Item {
                     Layout.rightMargin: 30 //TODO: Relative scaling
                     Layout.bottomMargin: 30 //TODO: Relative scaling
 
-                    property string line: {
-                        var fileUrl = Qt.resolvedUrl("../Quotes/nier.txt"); // Edit this to change the quote file
-                        var quoteText = "";
-                        var xhr = new XMLHttpRequest();
-                        xhr.open("GET", fileUrl, false);
-                        xhr.onreadystatechange = function() {
-                            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                                quoteText = xhr.responseText;
-                            }
-                        }
-                        xhr.send();
-                        var lines = quoteText.split(/\r?\n/).filter(function(line) { return line.trim().length > 0; });
-                        if (lines.length > 0) {
-                            var idx = Math.floor(Math.random() * lines.length);
-                            return lines[idx];
-                        }
-                        return "";
-                    }
+                    property int quoteIndex: Math.floor(Math.random() * quotes.quotesCount)
 
-                    property string quoteText: {
-                        var lines = logoQuote.line.split(/\r?\n/).filter(function(line) { return line.trim().length > 0; });
-                        if (lines.length > 0) {
-                            var idx = Math.floor(Math.random() * lines.length);
-                            var line = lines[idx];
-                            var tildeIdx = line.indexOf("~");
-                            var fullText = "";
-                            if (tildeIdx !== -1)
-                                fullText = line.substring(0, tildeIdx).trim();
-                            else
-                                fullText = line.trim();
-                            return fullText;
-                        }
-                        return "";
-                    }
+                    property string quoteText: quotes.quotes[quoteIndex][0]
 
-                    property string quoteAuthor: {
-                        var lines = logoQuote.line.split(/\r?\n/).filter(function(line) { return line.trim().length > 0; });
-                        if (lines.length > 0) {
-                            var idx = Math.floor(Math.random() * lines.length);
-                            var line = lines[idx];
-                            var tildeIdx = line.indexOf("~");
-                            if (tildeIdx !== -1)
-                                return line.substring(tildeIdx + 1).trim();
-                        }
-                        return "";
+                    property string quoteAuthor: quotes.quotes[quoteIndex][1]
+
+                    Quotes {
+                        id: quotes
                     }
 
                     Text {
                         anchors.left: parent.left
                         anchors.right: parent.right
-                        anchors.top: logoCaption.bottom
+                        anchors.top: parent.top
                         font.pointSize: sizeHelper.height / 80
                         font.family: root.fontFamily
                         color: "#34332B"
