@@ -1471,8 +1471,7 @@ Pane {
             xScale: {
                 let scaleByWidth  = root.width  / sizeHelper.width
                 let scaleByHeight = root.height / sizeHelper.height
-                console.log(scaleByWidth)
-                return Math.min(scaleByWidth, scaleByHeight)  // fit within screen
+                return Math.min(scaleByWidth, scaleByHeight)
             }
             yScale: xScale
         }
