@@ -2,7 +2,7 @@
 Broken system controls
 
 ## Previews
-[preview](./Previews/preview.mp4)
+[!preview](./Previews/preview.mp4)
 
 ## Features
 - The user will be shown with a **Capital Letter** regardless of the typed case, this is only a graphical effect
