@@ -2,7 +2,9 @@
 Broken system controls
 
 ## Previews
-![preview](./Previews/preview.mp4)
+
+https://github.com/user-attachments/assets/e19d932b-0477-4889-8172-57c3c5406f8e
+
 
 ## Features
 - The user will be shown with a **Capital Letter** regardless of the typed case, this is only a graphical effect
