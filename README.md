@@ -7,32 +7,37 @@ Broken system controls
 ## Features
 - The user will be shown with a **Capital Letter** regardless of the typed case, this is only a graphical effect
 - Last logged in user will be used as text placeholder
-- Random quotes will be fetched from the [Quotes Folder](./Quotes/)
-    - The quote file selected can be changed in the [LoginForm.qml](./Components/LoginForm.qml)
-    - Every line will be read as a single quote, everything after a tilde (~) will be considered as the source of the quote and will be placed in the bottom right
-- Sound effects play on focus, button press and login (WIP)
+- Random quotes will be fetched from the [Quotes](./Components/Quotes.qml) module
+    - The [Quotes](./Quotes/) Folder is now simply for reference and to store quotes you may want
+- Sound effects play on button switch
 - Scales to higher resolutions. If you have a 16:9 instead of a 16:10 monitor, change the height in the sizeHelper in [Main.qml](./Main.qml) from 1200 to 1080
 
 ## Structure
 
 ```
 YoRHa-sddm-theme/
+├── Assets/
+│   ├── Icons
+│   ├── sfx
+│   └── [Images]
 ├── Components/
-│   ├── Main.qml
-│   ├── LoginForm.qml
-│   ├── SystemControl.qml
-│   ├── SystemInformations.qml
+│   ├── ButtonBackground.qml
+│   ├── ControlButtons.qml
+│   ├── ControlPanel.qml
 │   ├── Footer.qml
 │   ├── Input.qml
-│   ├── SessionButton.qml
-│   └── SystemButtons
+│   ├── LoginForm.qml
+│   ├── Main.qml
+│   ├── Modal.qml
+│   ├── PanelButton.qml
+│   ├── Quotes.qml
+│   └── SessionButton.qml
+├── Fonts/
+│   └── Rodin-Pro-M.otf
+├── Previews/
+│   └── preview.mp4
 ├── Quotes/
 │   └── [quote files]
-├── Fonts/
-│   └── [fonts]
-├── Previews/
-│   ├── default.png
-│   └── de-select.png
 ├── AUTHORS
 ├── CHANGELOG.md
 ├── CREDITS

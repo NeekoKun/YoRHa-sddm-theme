@@ -18,7 +18,7 @@
         - [x] Input
         - [x] Avatar
         - [x] Footer
-    - [ ] Panel Buttons
+    - [x] Panel Buttons
 - [x] Smooth exit transition
     - [x] Hook to successful login (kind of)
     - [x] Horizontal Bars
@@ -26,7 +26,7 @@
     - [x] Circles
     - [x] Panels
     - [x] Triangle Grid
-    - [ ] Panel Buttons
+    - [x] Panel Buttons
 - [ ] Panel switch animations
 
 ## Tabs
