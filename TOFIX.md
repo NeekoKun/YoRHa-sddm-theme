@@ -5,7 +5,7 @@
 - [x] Change README preview
 - [x] Relink closing animation
 - [x] Fix Login Panel typewriter effect
-- [ ] Control Panel is slightly higher than Login Panel
+- [x] Control Panel is slightly higher than Login Panel
 - [ ] Abstract the button
 - [ ] Opacity transition modalBox
 - [ ] Translate [ButtonBackground.qml](./Components/ButtonBackground.qml) from shutdown to generic

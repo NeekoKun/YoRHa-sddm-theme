@@ -33,6 +33,7 @@ Column {
     property bool failed
     property string fontFamily: "Arial"
     property var formFunctions: parent.parent
+    property bool initialFocusDone: false
 
     required property PanelButton loginPanelButton
 
@@ -359,6 +360,11 @@ Column {
             ScriptAction {
                 script: {
                     usernameBackground.spawn()
+                    // Give focus to the username field only the first time sddm opens,
+                    // and if the last user is not forced or if the field is empty.
+                    if (!inputContainer.initialFocusDone && (config.ForceLastUser !== "true" || username.text.length === 0)) {
+                        initialUsernameFocusTimer.start()
+                    }
                 }
             }
         }
@@ -372,6 +378,11 @@ Column {
             ScriptAction {
                 script: {
                     passwordBackground.spawn()
+                    // Give focus to the password field only the first time sddm opens,
+                    // when the last user is forced and username is already filled.
+                    if (!inputContainer.initialFocusDone && config.ForceLastUser === "true" && username.text.length > 0) {
+                        initialPasswordFocusTimer.start()
+                    }
                 }
             }
         }
@@ -464,5 +475,26 @@ Column {
         interval: 2000
         onTriggered: failed = false
         running: false
+    }
+
+    // Small one-shot timers to avoid race conditions when forcing initial focus
+    Timer {
+        id: initialUsernameFocusTimer
+        interval: 50
+        repeat: false
+        onTriggered: {
+            username.forceActiveFocus()
+            inputContainer.initialFocusDone = true
+        }
+    }
+
+    Timer {
+        id: initialPasswordFocusTimer
+        interval: 50
+        repeat: false
+        onTriggered: {
+            password.forceActiveFocus()
+            inputContainer.initialFocusDone = true
+        }
     }
 }
