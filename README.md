@@ -68,3 +68,36 @@ YoRHa-sddm-theme/
 ```bash
 sddm-greeter --test-mode --theme <theme root folder>
 ```
+
+## Troubleshooting
+
+### Bigger/Smaller text
+The repo uses pointSize instead of pixelSize, so if
+```bash
+sddm-greeter --test-mode --theme /usr/share/sddm/themes/YoRHa-sddm-theme
+```
+shows a correct pixel size, the X11 sddm session has a wrong/different DPI scale set. To change the DPI, edit `/etc/sddm.conf` and add
+```bash
+#...
+
+[X11]
+    ServerArguments=-dpi <your system dpi>
+```
+
+to get you system dpi:
+
+<details>
+<summary>X11</summary>
+It should be readily available with
+```bash
+xdpyinfo | grep dots
+```
+</details>
+
+<details>
+<summary>Hyprland</summary>
+Get the working monitor name, then
+```
+hyprctl monitors | grep scale
+```
+</details>
