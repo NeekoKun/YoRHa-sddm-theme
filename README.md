@@ -84,20 +84,10 @@ shows a correct pixel size, the X11 sddm session has a wrong/different DPI scale
     ServerArguments=-dpi <your system dpi>
 ```
 
-to get you system dpi:
-
-<details>
-<summary>X11</summary>
-It should be readily available with
-```bash
-xdpyinfo | grep dots
-```
-</details>
-
-<details>
-<summary>Hyprland</summary>
-Get the working monitor name, then
-```
-hyprctl monitors | grep scale
-```
-</details>
+> [!TIP]
+> To get you system DPI you can:
+> - On X11
+>   - Run `xdgyinfo | grep dots`
+> - On Hyprland
+>   - Run `hyprctl monitors`
+>   - Get the `scale` field of the working monitor and multiply that by 100
