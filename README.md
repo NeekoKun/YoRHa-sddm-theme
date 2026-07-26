@@ -51,6 +51,8 @@ YoRHa-sddm-theme/
 ```
 
 ## Installation
+
+### Manual Install
 1. Clone the repository in `/usr/share/sddm/themes`
     ```bash
     cd /usr/share/sddm/themes
@@ -68,6 +70,19 @@ YoRHa-sddm-theme/
 ```bash
 sddm-greeter --test-mode --theme <theme root folder>
 ```
+
+### AUR
+Install `sddm-theme-yorha` with your favorite AUR helper
+
+```bash
+yay -S sddm-theme-yorha
+```
+
+```bash
+paru -S sddm-theme-yorha
+```
+
+This will write a configuration script in `/etc/sddm.conf.d/YoRHa-sddm-theme.conf` which should set it as the default theme.
 
 ## Troubleshooting
 
@@ -91,3 +106,6 @@ shows a correct pixel size, the X11 sddm session has a wrong/different DPI scale
 > - On Hyprland
 >   - Run `hyprctl monitors`
 >   - Get the `scale` field of the working monitor and multiply that by 100
+
+### The wrong theme shows up
+Probably another theme is conflicting in `/etc/sddm.conf`. check if the `Current` field is set anywhere other than `/etc/sddm.conf.d/YoRHa-sddm-theme.conf`
